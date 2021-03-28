@@ -1,0 +1,12 @@
+.titleFather {
+    width: 900px;
+    display: flex;
+    justify-content: space-between;
+}
+.title {
+    list-style: none;
+    height: 100%;
+    width: 150px;
+    line-height: 100px;
+    text-align: center;
+}
