@@ -25,14 +25,10 @@ class Learning extends react.Component<any, any> {
 }
 
 const mapStateToProps = (state: any) => { 
-    // 必须返回一个纯对象
-        return { // prop : state.xxx | 意思是将state中的某个数据映射到props中 
-            info: state.name 
-        } 
-    }  // 渲染的时候就可以使用this.props.foo
-        
-        
-// 然后render中直接通过this.props.onClick来调用dispatch,这样子就不需要在代码中来进行store.dispatch了
-connect(mapStateToProps)(Learning);
+  return {
+    store: state 
+  } 
+}   
+const Learnings = connect(mapStateToProps)(Learning);
 
-export default Learning;
+export default Learnings;

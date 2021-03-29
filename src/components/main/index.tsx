@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 import React from 'react';
 import './index.css';
 import { changeUserName } from '../../store/action/userInfo';
@@ -9,7 +9,8 @@ interface MainState {
 }
 
 interface MainProps {
-    name?: string
+    name?: string;
+    changeUserName: (data: any) => any;
 }
 
 class Main extends React.Component<MainProps, MainState> {
@@ -22,7 +23,7 @@ class Main extends React.Component<MainProps, MainState> {
 
     toChangeUserName = (e: any) => {
         console.log('aaa');
-        mapDispatchToProps('aaa');
+        this.props.changeUserName('aaa');
         // changeuserName();
     };
 
@@ -37,22 +38,21 @@ class Main extends React.Component<MainProps, MainState> {
 }
 
 const mapStateToProps = (state: any) => { 
-// 必须返回一个纯对象
-    return { // prop : state.xxx | 意思是将state中的某个数据映射到props中 
-            state: state 
+    console.log(state, 'state')
+    return {
+        state: state 
     } 
-}  // 渲染的时候就可以使用this.props.foo
+}
     
     
 const mapDispatchToProps = (dispatch: any) => { 
-    // 默认传递参数就是dispatch 
     return { 
         changeUserName(data: any) {
-        return dispatch(changeUserName(data)); 
+            return dispatch(changeUserName(data)); 
         } 
     }; 
 }
-// 然后render中直接通过this.props.onClick来调用dispatch,这样子就不需要在代码中来进行store.dispatch了
-connect(mapStateToProps, mapDispatchToProps)(Main);
 
-export default Main;
+// connect是返回一个新的组件，而不是改变你原来的组件，所有需要将新生成的组件抛出去，
+// 所以要export connect之后组件才行
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
