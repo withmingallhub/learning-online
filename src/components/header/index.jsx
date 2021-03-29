@@ -21,22 +21,13 @@ class Header extends React.Component {
         return(
             <>
                 <div className="titleFather">
-                        <Link style={{ textDecoration:'none'}} to={{pathname:'/'}}>
-                            <li className="title">主页</li>
+                        <Link style={{ textDecoration:'none'}} to={{pathname:'/teacher'}}>
+                            <li className="title">教师端</li>
                         </Link>
-                        <Link style={{ textDecoration:'none'}} to={{ pathname:'/every' }}>
-                            <li className="title">每日一题 </li>
+                        <Link style={{ textDecoration:'none'}} to={{ pathname:'/studentMain' }}>
+                            <li className="title">学生端 </li>
                         </Link>
-                        <Link style={{ textDecoration:'none'}} to={{ pathname:'/hot' }}>
-                            <li className="title">热门题目</li>
-                        </Link>
-                        <Link style={{ textDecoration:'none'}} to={{ pathname: '/proType' }}>
-                            <li className="title">题目类型</li>
-                        </Link>
-                        <Link style={{ textDecoration:'none'}} to={{ pathname: '/lovers' }}>
-                            <li className="title">收藏</li>
-                        </Link>
-                        <Link style={{ textDecoration:'none'}} to={{ pathname: '/userInfo' }}>
+                        <Link style={{ textDecoration:'none'}} to={{ pathname: '/login' }}>
                             <div style={{height: '60px',width: '60px',borderRadius: '50%',backgroundColor: 'black',marginTop: '20px'}}></div>
                         </Link>
                 </div>

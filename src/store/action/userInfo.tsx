@@ -30,3 +30,16 @@ interface changeUserImageRequest {
 export type UserInfoActionsType = 
 | changeUserNameRequest
 | changeUserImageRequest
+
+
+export const changeUserName = (info: any) => {
+    return {
+        type: CHANGE_USER_NAME,
+        info,
+    }
+}
+
+export const changeUserImage = (info: any) => ({
+    type: CHANGE_USER_IMAGE,
+    info
+})

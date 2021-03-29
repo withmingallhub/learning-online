@@ -1,21 +1,20 @@
-import React from 'react';
+import react from 'react'
 import './index.css';
 
-class ProType extends React.Component {
+class UserInfo extends react.Component {
     constructor(props) {
         super(props);
         this.state = {
 
         }
     }
-
     render() {
-        return (
-            <div className="proType">
-                aaaa
+        return(
+            <div className="userInfo">
+                every
             </div>
         )
     }
 }
 
-export default ProType;
+export default UserInfo;

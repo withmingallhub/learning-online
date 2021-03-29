@@ -4,17 +4,17 @@ import { UserInfoActionsType } from '../action/userInfo';
 type ActionsType = 
 | UserInfoActionsType
 
-interface reducerState {
+export interface reducerState {
     image: string;
     name: string;
 }
 
-const defaultState: reducerState  = {
+export const defaultState: reducerState  = {
     image: '1',
     name: '1',
 }
 
-function reducers(state: reducerState = defaultState , action: ActionsType) {
+function userInfoReducer(state: reducerState = defaultState , action: ActionsType) {
     let newState;
     switch (action.type) {
         case CHANGE_USER_NAME: {
@@ -34,7 +34,7 @@ function reducers(state: reducerState = defaultState , action: ActionsType) {
     return newState;
 }
 
-export default reducers;
+export default userInfoReducer;
 
 // function infoReducer(state: InitialState = initialState, action: Actions) {
 //     const { data } = action;

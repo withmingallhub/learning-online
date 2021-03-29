@@ -11,7 +11,7 @@ class Every extends react.Component {
     render() {
         return(
             <div className="every">
-                every
+                登录
             </div>
         )
     }
