@@ -1,6 +1,6 @@
 import './App.css';
 import Learning from './learning';
-import {Provider} from "react-redux";
+import {Provider} from 'react-redux';
 import store from './store';
 
 function App() {

@@ -16,30 +16,28 @@ export const CHANGE_USER_IMAGE = "CHANGE_USER_IMAGE";
 //     info
 // })
 
-
 export interface changeUserNameRequest {
-    type: typeof CHANGE_USER_NAME;
-    data: any;
+  type: typeof CHANGE_USER_NAME;
+  data: any;
 }
 
 interface changeUserImageRequest {
-    type: typeof CHANGE_USER_IMAGE;
-    data: any;
+  type: typeof CHANGE_USER_IMAGE;
+  data: any;
 }
 
-export type UserInfoActionsType = 
-| changeUserNameRequest
-| changeUserImageRequest
-
+export type UserInfoActionsType =
+  | changeUserNameRequest
+  | changeUserImageRequest;
 
 export const changeUserName = (info: any) => {
-    return {
-        type: CHANGE_USER_NAME,
-        info,
-    }
-}
+  return {
+    type: CHANGE_USER_NAME,
+    info,
+  };
+};
 
 export const changeUserImage = (info: any) => ({
-    type: CHANGE_USER_IMAGE,
-    info
-})
+  type: CHANGE_USER_IMAGE,
+  info,
+});
