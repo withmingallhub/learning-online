@@ -144,18 +144,44 @@ class VedioPlay extends react.Component<VedioPlayProps, VedioPlayState> {
   }
 
   FullScreen() {
-    const that = this;
-    if (!this.state.isFullScreen) {
-      that.player.requestFullscreen();
-      this.player.control = true;
-      this.setState({
-        isFullScreen: true,
-      });
-    } else {
-      this.player.control = false;
-      this.setState({
-        isFullScreen: false,
-      });
+    // this.player.requestFullscreen();
+    // var a = document.getElementsByClassName("video-js");
+    document.querySelector("video").requestFullscreen();
+    // if (!this.state.isFullScreen) {
+    //   document.querySelector("video").requestFullscreen();
+    //   this.setState({
+    //     isFullScreen: true,
+    //   });
+    // } else {
+    //   // a.requestPointerLock();
+    //   document.exitFullscreen();
+    //   this.setState({
+    //     isFullScreen: false,
+    //   });
+    // }
+  }
+
+  keyDown(num: any) {
+    switch (num.keyCode) {
+      case 32:
+        this.state.isPlay ? this.vedioPause() : this.vedioPlay();
+        break;
+      case 39:
+        this.sliderChange(this.player.currentTime() + 3);
+        break;
+      case 37:
+        this.sliderChange(this.player.currentTime() - 3);
+        break;
+      case 38:
+        this.volumeChange(
+          this.state.volume + 1 > 10 ? 10 : this.state.volume + 1
+        );
+        break;
+      case 40:
+        this.volumeChange(
+          this.state.volume - 1 < 0 ? 0 : this.state.volume - 1
+        );
+        break;
     }
   }
 
@@ -170,6 +196,7 @@ class VedioPlay extends react.Component<VedioPlayProps, VedioPlayState> {
             ? {
                 border: "1px solid red",
                 position: "fixed",
+                height: "100%",
                 width: "100px",
                 backgroundColor: "rgba(0,0,0,0.5)",
               }
@@ -182,6 +209,7 @@ class VedioPlay extends react.Component<VedioPlayProps, VedioPlayState> {
         }
       >
         <video
+          onKeyDown={(num: any) => this.keyDown(num)}
           onClick={isPlay ? () => this.vedioPause() : () => this.vedioPlay()}
           id={this.props.id}
           className="video-js vjs-default-skin vjs-big-play-centered"

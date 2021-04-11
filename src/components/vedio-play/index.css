@@ -12,6 +12,7 @@
   font-size: 30px;
   color: #fff;
   margin-right: 10px;
+  margin-left: 10px;
 }
 
 :hover .play_icon {
@@ -46,6 +47,7 @@
   font-size: 18px;
   color: #fff;
   margin-right: 10px;
+  margin-left: 10px;
 }
 
 :hover .all_veiw {
