@@ -1,41 +1,276 @@
 import react from "react";
 import videojs from "video.js";
+import "video.js/dist/video-js.css";
+import { Slider, Tooltip } from "antd";
+import {
+  PlayCircleOutlined,
+  BackwardOutlined,
+  ForwardOutlined,
+  ExpandOutlined,
+  PauseCircleOutlined,
+  SoundOutlined,
+  NotificationOutlined,
+} from "@ant-design/icons";
+import "./index.css";
 
 interface VedioPlayProps {
-  url: string;
+  width: string;
+  url: any;
   id: any;
 }
-interface VedioPlayState {}
+interface VedioPlayState {
+  isPlay: boolean;
+  current: string; // 转为字符串的00：00的当前时长
+  allTime: string; // 转为字符串的00：00的视频时长
+  sliderLengthNow: number; // 当前播放的时长，number
+  sliderLength: number; // 视频的时长number
+  volume: number;
+  isFullScreen: boolean;
+  width: string;
+}
 
 class VedioPlay extends react.Component<VedioPlayProps, VedioPlayState> {
-  private player = null;
   constructor(props: VedioPlayProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      isPlay: false,
+      current: "00:00", //当前时间
+      allTime: "00:00", //当前歌曲时长
+      sliderLengthNow: 0,
+      sliderLength: 0,
+      volume: 0,
+      isFullScreen: false,
+      width: "",
+    };
   }
 
+  private player: any;
+
   componentDidMount() {
-    this.player = videojs(this.props.id, {
-      autoplay: true, //播放器准备好之后，是否自动播放，默认false
-      controls: false, //是否拥有控制条 ，默认true,如果设为false ,界面上不会出现任何控制按钮，那么只能通过api进行控制了
-      //我设置的是false然后通过API和自定义控制台联动
-      //height: 字符串或数字（字符串带单位）视频容器的高度，比如： height:300 or height:'300px'
-      //width: 字符串或数字,视频容器的宽度, 单位像素
-      //loop : true/false,视频播放结束后，是否循环播放
-      muted: true, //是否静音
-      //poster: 通常传入一个URL//播放前显示的视频画面，播放开始之后自动移除。
-      //preload: 'auto'/ 'metadata' / 'none',预加载,auto-自动,metadata-元数据信息 ，比如视频长度，尺寸等,none-不预加载任何数据，直到用户开始播放才开始下载
-      //notSupportedMessage: '此视频暂无法播放，检查相机状态是否正常或请查看是否安装flash',//无法播放时显示的信息
+    this.setState({
+      width: this.props.width,
     });
+    // instantiate Video.js
+    this.player = videojs(
+      this.props.id,
+      {
+        autoplay: false,
+        controls: false,
+        notSupportedMessage: "该视频暂时不能播放",
+        width: this.props.width,
+      },
+      function onPlayerReady() {
+        console.log("onPlayerReady", this);
+      }
+    );
     this.player.src({
       src: this.props.url,
     });
+    this.timeUpdate();
+  }
+
+  componentWillUnmount() {
+    this.player.dispose(); //清理-销毁
+  }
+
+  getVedioTime() {
+    const sliderLength = this.player.duration();
+    console.log(sliderLength);
+    var allTime =
+      (Math.floor(sliderLength / 60) + "").padStart(2, "0") +
+      ":" +
+      (Math.floor(sliderLength % 60) + "").padStart(2, "0");
+    this.setState({
+      allTime,
+      sliderLength: parseInt(sliderLength),
+    });
+  }
+
+  timeUpdate() {
+    const that = this;
+    // 视频事件改变时候触发的回调函数
+    this.player.on("timeupdate", () => {
+      const sliderLengthNow = that.player.currentTime();
+      var currentTime =
+        (Math.floor(sliderLengthNow / 60) + "").padStart(2, "0") +
+        ":" +
+        (Math.floor(sliderLengthNow % 60) + "").padStart(2, "0");
+      that.setState({
+        current: currentTime,
+        sliderLengthNow: parseInt(sliderLengthNow),
+      });
+    });
+
+    // 视频加载完毕触发的回调函数
+    this.player.on("loadedmetadata", () => {
+      this.getVedioTime();
+    });
+    this.player.off(this.player, "ended", function() {
+      console.log("end");
+      that.setState({
+        isPlay: false,
+      });
+    });
+    const volume = this.player.volume() * 10;
+    this.setState({
+      volume: volume,
+    });
+  }
+
+  sliderChange(slider: number) {
+    this.player.currentTime(slider);
+  }
+
+  vedioPlay() {
+    console.log(this.player.duration());
+    this.setState({
+      isPlay: true,
+    });
+    this.player.play();
+  }
+
+  vedioPause() {
+    this.setState({
+      isPlay: false,
+    });
+    this.player.pause();
+  }
+
+  volumeChange(volume: number) {
+    this.setState({
+      volume: volume,
+    });
+    this.player.volume(volume * 0.1);
+  }
+
+  FullScreen() {
+    const that = this;
+    if (!this.state.isFullScreen) {
+      that.player.requestFullscreen();
+      this.player.control = true;
+      this.setState({
+        isFullScreen: true,
+      });
+    } else {
+      this.player.control = false;
+      this.setState({
+        isFullScreen: false,
+      });
+    }
   }
 
   render() {
+    const { isPlay, current, allTime } = this.state;
+
     return (
-      <div>
-        <video id="id" className="video-js vjs-default-skin" data-setup />
+      <div
+        id="vedio_player"
+        style={
+          this.state.isFullScreen
+            ? {
+                border: "1px solid red",
+                position: "fixed",
+                width: "100px",
+                backgroundColor: "rgba(0,0,0,0.5)",
+              }
+            : {
+                width: this.state.width,
+                border: "1px solid red",
+                position: "relative",
+                backgroundColor: "rgba(0,0,0,0.5)",
+              }
+        }
+      >
+        <video
+          onClick={isPlay ? () => this.vedioPause() : () => this.vedioPlay()}
+          id={this.props.id}
+          className="video-js vjs-default-skin vjs-big-play-centered"
+          data-setup
+        />
+        <div
+          style={{
+            width: "100%",
+            minHeight: "60px",
+            position: "absolute",
+            bottom: "0px",
+            zIndex: 200,
+          }}
+        >
+          <div className="vedio_controls">
+            <Slider
+              value={this.state.sliderLengthNow}
+              max={this.state.sliderLength}
+              onChange={(slider: number) => this.sliderChange(slider)}
+            />
+          </div>
+          <div className="vedio_controls_box">
+            <div
+              style={{
+                height: "100%",
+                width: "50%",
+                display: "flex",
+                alignItems: "center",
+                color: "#fff",
+              }}
+            >
+              {this.state.isPlay ? (
+                <PauseCircleOutlined
+                  className="play_icon"
+                  onClick={() => this.vedioPause()}
+                />
+              ) : (
+                <PlayCircleOutlined
+                  className="play_icon"
+                  onClick={() => this.vedioPlay()}
+                />
+              )}
+              {current}/{allTime}
+              <Tooltip title="快退三秒">
+                <BackwardOutlined
+                  className="play_back"
+                  onClick={() =>
+                    this.sliderChange(this.player.currentTime() - 3)
+                  }
+                />
+              </Tooltip>
+              <Tooltip title="快进三秒">
+                <ForwardOutlined
+                  className="play_forward"
+                  onClick={() =>
+                    this.sliderChange(this.player.currentTime() + 3)
+                  }
+                />
+              </Tooltip>
+            </div>
+            <div
+              style={{
+                height: "100%",
+                width: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
+              {this.state.volume === 0 ? (
+                <NotificationOutlined style={{ color: "#fff" }} />
+              ) : (
+                <SoundOutlined style={{ color: "#fff" }} />
+              )}
+              <div style={{ width: "80px" }}>
+                <Slider
+                  value={this.state.volume}
+                  max={10}
+                  onChange={(slider: number) => this.volumeChange(slider)}
+                />
+              </div>
+
+              <ExpandOutlined
+                className="all_veiw"
+                onClick={() => this.FullScreen()}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import react from "react";
-// import testVedio from "../../vedio/test.mp4";
 import VedioPlay from "./index";
+const vedio = require("../../vedio/test.mp4").default;
 
 interface VedioFatherProps {}
 interface VedioFatherState {}
@@ -11,10 +11,14 @@ class VedioFather extends react.Component<VedioFatherProps, VedioFatherState> {
     this.state = {};
   }
 
+  componentDidMount() {
+    console.log("vedioUrl", vedio);
+  }
+
   render() {
     return (
       <div>
-        <VedioFather url="../../vedio/test.mp4" id="1" />
+        <VedioPlay url={vedio} id="vedio_1" width="1000px" />
       </div>
     );
   }

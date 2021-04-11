@@ -79,7 +79,7 @@
     "ts-pnp": "1.2.0",
     "typescript": "^4.2.3",
     "url-loader": "4.1.1",
-    "videojs": "^1.0.0",
+    "video.js": "^7.11.8",
     "web-vitals": "^1.1.1",
     "webpack": "4.44.2",
     "webpack-dev-server": "3.11.1",

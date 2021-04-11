@@ -13,7 +13,7 @@ function Rout() {
       <Route path="/login" component={Login}></Route>
       <Route path="/studentMain" component={StudentMain}></Route>
       <Route path="/audio" component={Recorders}></Route>
-      <Route path="/vedioPlay" component={VedioFather}></Route>
+      <Route path="/vedio" component={VedioFather}></Route>
     </>
   );
 }
