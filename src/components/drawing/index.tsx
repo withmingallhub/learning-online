@@ -1,0 +1,1179 @@
+import react from "react";
+import { Button, Input } from "antd";
+import circle from "./image/circle.png";
+import line from "./image/line.png";
+import ellipse from "./image/ellipse.png";
+import rect from "./image/rect.png";
+import sector from "./image/sector.png";
+import droplet from "./image/droplet.png";
+import arc from "./image/arc.png";
+import triangle from "./image/triangle.png";
+import polygon from "./image/polygon.png";
+import star from "./image/star.png";
+import root from "./image/root.png";
+import "./index.css";
+const zrender = require("zrender");
+
+interface DrawingProps {}
+interface DrawingState {
+  drawingId: number;
+  controlLine: any;
+  controlRoot: any;
+  controlArc: any;
+  controlTriangle: any;
+  controlRect: any;
+  controlCircle: any;
+  controlEllipse: any;
+  controlSector: any;
+  isControl: boolean;
+}
+
+class Drawing extends react.Component<DrawingProps, DrawingState> {
+  private drawingCanvas: any;
+  private canvasInit: any;
+  private drawingArray: any = {};
+  constructor(props: DrawingProps) {
+    super(props);
+    this.state = {
+      drawingId: 0,
+      // 修改线段的数据
+      controlLine: {
+        x1: 0,
+        y1: 0,
+        x2: 0,
+        y2: 0,
+        rotation: 0,
+      },
+      // 修改点的数据
+      controlRoot: {
+        r: 0,
+        rotation: 0,
+      },
+      // 修改曲线的数据
+      controlArc: {
+        cx: 0,
+        cy: 0,
+        startAngle: 0,
+        endAngle: 0,
+        r: 0,
+        rotation: 0,
+      },
+      // 修改正三角形的数据
+      controlTriangle: {
+        r: 0,
+        x: 0,
+        t: 0,
+        rotation: 0,
+      },
+      controlRect: {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        rotation: 0,
+      },
+      controlCircle: {
+        r: 0,
+        roation: 0,
+      },
+      controlEllipse: {
+        cx: 0,
+        cy: 0,
+        rx: 0,
+        ry: 0,
+        rotation: 0,
+      },
+      controlSector: {
+        cx: 0,
+        cy: 0,
+        startAngle: 0,
+        endAngle: 0,
+        r: 0,
+        rotation: 0,
+      },
+      isControl: false,
+    };
+  }
+
+  componentDidMount() {
+    this.drawingInit();
+  }
+
+  // 初始化画板
+  drawingInit() {
+    this.drawingCanvas = document.getElementById("drawing_canvas");
+    this.canvasInit = zrender.init(this.drawingCanvas);
+  }
+
+  // 清除画板
+  redrawing() {
+    zrender.dispose(this.canvasInit);
+    this.drawingInit();
+  }
+
+  // 点
+  drawingRoot() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Circle({
+      id: key,
+      shape: {
+        cx: 100,
+        cy: 100,
+        r: 3,
+        type: "root",
+      },
+      style: {
+        fill: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      this.setState({
+        drawingId: e.target.id,
+        controlRoot: {
+          r: shape.r,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 点操作台
+  controlRoot() {
+    const { r } = this.state.controlRoot;
+    return (
+      <div>
+        点半径
+        <Input
+          value={isNaN(r) ? 0 : r}
+          onChange={(value) => {
+            const { controlRoot } = this.state;
+            controlRoot.r = parseInt(value.target.value);
+            this.setState({
+              controlRoot: controlRoot,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRootInfo()}>确认</Button>
+      </div>
+    );
+  }
+
+  // 更新点的数据重新渲染视图
+  controlRootInfo() {
+    const { controlRoot } = this.state;
+    this.drawingArray[this.state.drawingId].attr({
+      shape: {
+        r: controlRoot.r,
+      },
+      draggable: true,
+    });
+  }
+
+  // 线段
+  drawingLine() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Line({
+      id: key,
+      shape: {
+        x1: 100,
+        y1: 100,
+        x2: 200,
+        y2: 100,
+        type: "line",
+      },
+      style: {
+        fill: "none",
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      this.setState({
+        drawingId: e.target.id,
+        controlLine: {
+          x1: shape.x1,
+          y1: shape.y1,
+          x2: shape.x2,
+          y2: shape.y2,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 线段操作台
+  controlLine() {
+    const { x1, y1, x2, y2, rotation } = this.state.controlLine;
+    return (
+      <div>
+        初始X坐标
+        <Input
+          value={isNaN(x1) ? "" : x1}
+          onChange={(value) => {
+            const { controlLine } = this.state;
+            controlLine.x1 = parseInt(value.target.value);
+            this.setState({
+              controlLine: controlLine,
+            });
+          }}
+        />
+        初始Y坐标
+        <Input
+          value={isNaN(y1) ? "" : y1}
+          onChange={(value) => {
+            const { controlLine } = this.state;
+            controlLine.y1 = parseInt(value.target.value);
+            this.setState({
+              controlLine: controlLine,
+            });
+          }}
+        />
+        终点X坐标
+        <Input
+          value={isNaN(x2) ? "" : x2}
+          onChange={(value) => {
+            const { controlLine } = this.state;
+            controlLine.x2 = parseInt(value.target.value);
+            this.setState({
+              controlLine: controlLine,
+            });
+          }}
+        />
+        终点Y坐标
+        <Input
+          value={isNaN(y2) ? "" : y2}
+          onChange={(value) => {
+            const { controlLine } = this.state;
+            controlLine.y2 = parseInt(value.target.value);
+            this.setState({
+              controlLine: controlLine,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlLineInfo()}>确认</Button>
+        <br />
+        旋转角度
+        <Input
+          value={isNaN(rotation) ? "" : rotation}
+          onChange={(value) => {
+            const { controlLine } = this.state;
+            controlLine.rotation = parseInt(value.target.value);
+            this.setState({
+              controlLine: controlLine,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRotaion(this.state.controlLine)}>
+          确认
+        </Button>
+      </div>
+    );
+  }
+
+  // 更新线段视图
+  controlLineInfo() {
+    const { controlLine } = this.state;
+    this.drawingArray[this.state.drawingId].attr({
+      shape: {
+        x1: controlLine.x1,
+        y1: controlLine.y1,
+        x2: controlLine.x2,
+        y2: controlLine.y2,
+      },
+      draggable: true,
+    });
+  }
+
+  // 曲线
+  drawingArc() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Arc({
+      id: key,
+      shape: {
+        cx: 80,
+        cy: 80,
+        r: 30,
+        startAngle: Math.PI * 1.25,
+        endAngle: Math.PI + (Math.PI * 125) / 180,
+        clockwise: true,
+        type: "arc",
+      },
+      style: {
+        fill: "none",
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      this.setState({
+        drawingId: e.target.id,
+        controlArc: {
+          cx: shape.cx,
+          cy: shape.cy,
+          r: shape.r,
+          startAngle: parseInt(
+            (((shape.startAngle - Math.PI) * 180) / Math.PI).toString()
+          ),
+          endAngle: parseInt(
+            (((shape.endAngle - Math.PI) * 180) / Math.PI).toString()
+          ),
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 曲线操作台
+  controlArc() {
+    const { cx, cy, startAngle, endAngle, rotation, r } = this.state.controlArc;
+    return (
+      <div>
+        圆心横坐标
+        <Input
+          value={isNaN(cx) ? "" : cx}
+          onChange={(value) => {
+            const { controlArc } = this.state;
+            controlArc.cx = parseInt(value.target.value);
+            this.setState({
+              controlArc: controlArc,
+            });
+          }}
+        />
+        圆心纵坐标
+        <Input
+          value={isNaN(cy) ? "" : cy}
+          onChange={(value) => {
+            const { controlArc } = this.state;
+            controlArc.cy = parseInt(value.target.value);
+            this.setState({
+              controlArc: controlArc,
+            });
+          }}
+        />
+        曲线半径
+        <Input
+          value={isNaN(r) ? "" : r}
+          onChange={(value) => {
+            const { controlArc } = this.state;
+            controlArc.r = parseInt(value.target.value);
+            this.setState({
+              controlArc: controlArc,
+            });
+          }}
+        />
+        起始角度
+        <Input
+          value={isNaN(startAngle) ? "" : startAngle}
+          onChange={(value) => {
+            const { controlArc } = this.state;
+            controlArc.startAngle = parseInt(value.target.value);
+            this.setState({
+              controlArc: controlArc,
+            });
+          }}
+        />
+        终点角度
+        <Input
+          value={isNaN(endAngle) ? "" : endAngle}
+          onChange={(value) => {
+            const { controlArc } = this.state;
+            controlArc.endAngle = parseInt(value.target.value);
+            this.setState({
+              controlArc: controlArc,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlArcInfo()}>确认</Button>
+        <br />
+        旋转角度
+        <Input
+          value={isNaN(rotation) ? 0 : rotation}
+          onChange={(value) => {
+            const { controlArc } = this.state;
+            controlArc.rotation = parseInt(value.target.value);
+            this.setState({
+              controlArc: controlArc,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRotaion(this.state.controlArc)}>
+          确认
+        </Button>
+      </div>
+    );
+  }
+
+  // 更新曲线视图
+  controlArcInfo() {
+    const { controlArc } = this.state;
+    console.log(controlArc);
+    this.drawingArray[this.state.drawingId].attr({
+      shape: {
+        cx: controlArc.cx,
+        cy: controlArc.cy,
+        r: controlArc.r,
+        startAngle: Math.PI + (Math.PI * controlArc.startAngle) / 180,
+        endAngle: Math.PI + (Math.PI * controlArc.endAngle) / 180,
+      },
+      draggable: true,
+    });
+  }
+
+  // 正三角形
+  drawingTriangle() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Isogon({
+      id: key,
+      shape: {
+        x: 80,
+        y: 80,
+        r: 19, // 外切圆半径
+        n: 3,
+        type: "triangle",
+      },
+      style: {
+        fill: "none",
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      console.log(e);
+      this.setState({
+        drawingId: e.target.id,
+        controlTriangle: {
+          r: shape.r,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 正三角形操作台
+  controlTriangle() {
+    const { r, rotation } = this.state.controlTriangle;
+    return (
+      <div>
+        正三角形半径
+        <Input
+          value={isNaN(r) ? "" : r}
+          onChange={(value) => {
+            const { controlTriangle } = this.state;
+            controlTriangle.r = parseInt(value.target.value);
+            this.setState({
+              controlTriangle: controlTriangle,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlTriangleInfo()}>确认</Button>
+        <br />
+        旋转角度
+        <Input
+          value={isNaN(rotation) ? 0 : rotation}
+          onChange={(value) => {
+            const { controlTriangle } = this.state;
+            controlTriangle.rotation = parseInt(value.target.value);
+            this.setState({
+              controlTriangle: controlTriangle,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRotaion(this.state.controlTriangle)}>
+          确认
+        </Button>
+      </div>
+    );
+  }
+
+  // 更新正三角形视图
+  controlTriangleInfo() {
+    const { controlTriangle } = this.state;
+    this.drawingArray[this.state.drawingId].attr({
+      shape: {
+        r: controlTriangle.r,
+      },
+      draggable: true,
+    });
+  }
+
+  // 正四边形
+  drawingRect() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Rect({
+      id: key,
+      shape: {
+        r: [0, 0, 0, 0],
+        x: 80,
+        y: 80,
+        width: 70,
+        height: 40,
+        type: "rect",
+      },
+      style: {
+        fill: "none",
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      this.setState({
+        drawingId: e.target.id,
+        controlRect: {
+          x: shape.x,
+          y: shape.y,
+          width: shape.width,
+          height: shape.height,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  controlRect() {
+    const { x, y, width, height, rotation } = this.state.controlRect;
+    return (
+      <div>
+        正四边形左上角横坐标
+        <Input
+          value={isNaN(x) ? "" : x}
+          onChange={(value) => {
+            const { controlRect } = this.state;
+            controlRect.x = parseInt(value.target.value);
+            this.setState({
+              controlRect: controlRect,
+            });
+          }}
+        />
+        正四边形左上角纵坐标
+        <Input
+          value={isNaN(y) ? "" : y}
+          onChange={(value) => {
+            const { controlRect } = this.state;
+            controlRect.y = parseInt(value.target.value);
+            this.setState({
+              controlRect: controlRect,
+            });
+          }}
+        />
+        正四边形宽度
+        <Input
+          value={isNaN(width) ? "" : width}
+          onChange={(value) => {
+            const { controlRect } = this.state;
+            controlRect.width = parseInt(value.target.value);
+            this.setState({
+              controlRect: controlRect,
+            });
+          }}
+        />
+        正四边形高度
+        <Input
+          value={isNaN(height) ? "" : height}
+          onChange={(value) => {
+            const { controlRect } = this.state;
+            controlRect.height = parseInt(value.target.value);
+            this.setState({
+              controlRect: controlRect,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRectInfo()}>确认</Button>
+        <br />
+        旋转角度
+        <Input
+          value={isNaN(rotation) ? "" : rotation}
+          onChange={(value) => {
+            const { controlRect } = this.state;
+            controlRect.rotation = parseInt(value.target.value);
+            this.setState({
+              controlRect: controlRect,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRotaion(this.state.controlRect)}>
+          确认
+        </Button>
+      </div>
+    );
+  }
+
+  controlRectInfo() {
+    const { controlRect } = this.state;
+    this.drawingArray[this.state.drawingId].attr({
+      shape: {
+        x: controlRect.x,
+        y: controlRect.y,
+        width: controlRect.width,
+        height: controlRect.height,
+      },
+      draggable: true,
+    });
+  }
+
+  // 圆
+  drawingCircle() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Circle({
+      shape: {
+        cx: 150,
+        cy: 50,
+        r: 30,
+        type: "circle",
+      },
+      style: {
+        fill: "none",
+        stroke: "black",
+      },
+      id: key,
+      draggable: true,
+    });
+    this.drawingArray[key].on(
+      "click",
+      (e: any) => {
+        const { shape } = e.target;
+        this.setState({
+          drawingId: e.target.id,
+          controlCircle: {
+            r: shape.r,
+          },
+        });
+      },
+      this.context
+    );
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  controlCircle() {
+    const { r } = this.state.controlCircle;
+    return (
+      <div>
+        圆半径
+        <Input
+          value={isNaN(r) ? "" : r}
+          onChange={(value) => {
+            const { controlCircle } = this.state;
+            controlCircle.r = parseInt(value.target.value);
+            this.setState({
+              controlCircle: controlCircle,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlCircleInfo()}>确认</Button>
+      </div>
+    );
+  }
+
+  controlCircleInfo() {
+    const { controlCircle } = this.state;
+    this.drawingArray[this.state.drawingId].attr({
+      shape: {
+        r: controlCircle.r,
+      },
+      draggable: true,
+    });
+  }
+
+  //椭圆
+  drawingEllipse() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Ellipse({
+      id: key,
+      shape: {
+        cx: 200,
+        cy: 200,
+        rx: 50,
+        ry: 35,
+        type: "ellipse",
+      },
+      style: {
+        fill: "none",
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      this.setState({
+        drawingId: e.target.id,
+        controlEllipse: {
+          cx: shape.cx,
+          cy: shape.cy,
+          rx: shape.rx,
+          ry: shape.ry,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  controlEllipse() {
+    const { cx, cy, rx, ry, rotation } = this.state.controlEllipse;
+    return (
+      <div>
+        椭圆心横坐标
+        <Input
+          value={isNaN(cx) ? "" : cx}
+          onChange={(value) => {
+            const { controlEllipse } = this.state;
+            controlEllipse.cx = parseInt(value.target.value);
+            this.setState({
+              controlEllipse: controlEllipse,
+            });
+          }}
+        />
+        椭圆心纵坐标
+        <Input
+          value={isNaN(cy) ? "" : cy}
+          onChange={(value) => {
+            const { controlEllipse } = this.state;
+            controlEllipse.cy = parseInt(value.target.value);
+            this.setState({
+              controlEllipse: controlEllipse,
+            });
+          }}
+        />
+        椭圆横半径
+        <Input
+          value={isNaN(rx) ? "" : rx}
+          onChange={(value) => {
+            const { controlEllipse } = this.state;
+            controlEllipse.rx = parseInt(value.target.value);
+            this.setState({
+              controlEllipse: controlEllipse,
+            });
+          }}
+        />
+        椭圆纵半径
+        <Input
+          value={isNaN(ry) ? "" : ry}
+          onChange={(value) => {
+            const { controlEllipse } = this.state;
+            controlEllipse.ry = parseInt(value.target.value);
+            this.setState({
+              controlEllipse: controlEllipse,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlEllipseInfo()}>确认</Button>
+        <br />
+        旋转角度
+        <Input
+          value={isNaN(rotation) ? "" : rotation}
+          onChange={(value) => {
+            const { controlEllipse } = this.state;
+            controlEllipse.rotation = parseInt(value.target.value);
+            this.setState({
+              controlEllipse: controlEllipse,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRotaion(this.state.controlEllipse)}>
+          确认
+        </Button>
+      </div>
+    );
+  }
+
+  controlEllipseInfo() {
+    const { controlEllipse } = this.state;
+    this.drawingArray[this.state.drawingId].attr({
+      shape: {
+        cx: controlEllipse.cx,
+        cy: controlEllipse.cy,
+        rx: controlEllipse.rx,
+        ry: controlEllipse.ry,
+      },
+      draggable: true,
+    });
+  }
+
+  // 扇形
+  drawingSector() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Sector({
+      id: key,
+      shape: {
+        cx: 100,
+        cy: 100,
+        r: 60,
+        startAngle: Math.PI,
+        endAngle: Math.PI + (Math.PI * 90) / 180,
+        clockwise: true,
+        type: "sector",
+      },
+      style: {
+        fill: "none",
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      console.log(shape);
+      this.setState({
+        drawingId: e.target.id,
+        controlSector: {
+          cx: shape.cx,
+          cy: shape.cy,
+          r: shape.r,
+          startAngle: parseInt(
+            (((shape.startAngle - Math.PI) * 180) / Math.PI).toString()
+          ),
+          endAngle: parseInt(
+            (((shape.endAngle - Math.PI) * 180) / Math.PI).toString()
+          ),
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  controlSector() {
+    const {
+      cx,
+      cy,
+      startAngle,
+      endAngle,
+      rotation,
+      r,
+    } = this.state.controlSector;
+    return (
+      <div>
+        圆心横坐标
+        <Input
+          value={isNaN(cx) ? "" : cx}
+          onChange={(value) => {
+            const { controlSector } = this.state;
+            controlSector.cx = parseInt(value.target.value);
+            this.setState({
+              controlSector: controlSector,
+            });
+          }}
+        />
+        圆心纵坐标
+        <Input
+          value={isNaN(cy) ? "" : cy}
+          onChange={(value) => {
+            const { controlSector } = this.state;
+            controlSector.cy = parseInt(value.target.value);
+            this.setState({
+              controlSector: controlSector,
+            });
+          }}
+        />
+        扇形半径
+        <Input
+          value={isNaN(r) ? "" : r}
+          onChange={(value) => {
+            const { controlSector } = this.state;
+            controlSector.r = parseInt(value.target.value);
+            this.setState({
+              controlSector: controlSector,
+            });
+          }}
+        />
+        起始角度
+        <Input
+          value={isNaN(startAngle) ? "" : startAngle}
+          onChange={(value) => {
+            const { controlSector } = this.state;
+            controlSector.startAngle = parseInt(value.target.value);
+            this.setState({
+              controlSector: controlSector,
+            });
+          }}
+        />
+        终点角度
+        <Input
+          value={isNaN(endAngle) ? "" : endAngle}
+          onChange={(value) => {
+            const { controlSector } = this.state;
+            controlSector.endAngle = parseInt(value.target.value);
+            this.setState({
+              controlSector: controlSector,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlSectorInfo()}>确认</Button>
+        <br />
+        旋转角度
+        <Input
+          value={isNaN(rotation) ? 0 : rotation}
+          onChange={(value) => {
+            const { controlSector } = this.state;
+            controlSector.rotation = parseInt(value.target.value);
+            this.setState({
+              controlSector: controlSector,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRotaion(this.state.controlSector)}>
+          确认
+        </Button>
+      </div>
+    );
+  }
+
+  controlSectorInfo() {
+    const { controlSector } = this.state;
+    console.log(controlSector);
+    this.drawingArray[this.state.drawingId].attr({
+      shape: {
+        cx: controlSector.cx,
+        cy: controlSector.cy,
+        r: controlSector.r,
+        startAngle: Math.PI + (Math.PI * controlSector.startAngle) / 180,
+        endAngle: Math.PI + (Math.PI * controlSector.endAngle) / 180,
+      },
+      draggable: true,
+    });
+  }
+
+  // 水滴
+  drawingDroplet() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Droplet({
+      id: key,
+      shape: {
+        cx: 80,
+        cy: 80,
+        width: 20,
+        height: 40,
+        type: "droplet",
+      },
+      style: {
+        fill: "none",
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      console.log("aa", e);
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 正多边形
+  drawingPolygon() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Isogon({
+      id: key,
+      shape: {
+        x: 80,
+        y: 80,
+        r: 18.5, // 外切圆半径
+        n: 5,
+        type: "polygon",
+      },
+      style: {
+        fill: "none",
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      console.log("aa", e);
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 星星
+  drawingStar() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Star({
+      id: key,
+      shape: {
+        cx: 80,
+        cy: 80,
+        r: 36,
+        n: 5,
+        r0: 14,
+        type: "star",
+      },
+      style: {
+        fill: "none",
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      console.log("aa", e);
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 图形旋转
+  controlRotaion(control) {
+    let xSize: number, ySize: number;
+    switch (this.drawingArray[this.state.drawingId].shape.type) {
+      case "line":
+        xSize = 100;
+        ySize = 100;
+        break;
+
+      case "arc":
+        const { cx, cy } = this.drawingArray[this.state.drawingId].shape;
+        xSize = cx;
+        ySize = cy;
+        break;
+      case "triangle":
+        const { x, y } = this.drawingArray[this.state.drawingId].shape;
+        xSize = x;
+        ySize = y;
+        break;
+      case "rect":
+        const { shape } = this.drawingArray[this.state.drawingId];
+        xSize = shape.x;
+        ySize = shape.y;
+        break;
+      case "ellipse":
+        const shape1 = this.drawingArray[this.state.drawingId].shape;
+        xSize = shape1.cx;
+        ySize = shape1.cy;
+        break;
+      case "sector":
+        const shape2 = this.drawingArray[this.state.drawingId].shape;
+        xSize = shape2.cx;
+        ySize = shape2.cy;
+        break;
+    }
+
+    this.drawingArray[this.state.drawingId].attr({
+      rotation: (Math.PI * control.rotation) / 180,
+      origin: [xSize, ySize],
+    });
+  }
+
+  render() {
+    return (
+      <div style={{ display: "flex" }}>
+        <div
+          // onClick={() => {
+          //   this.drawingArray["111111"].hide();
+          // }}
+          className="geometry"
+        >
+          <div className="clear_drawing" onClick={() => this.redrawing()}>
+            <Button>清除所有图形</Button>
+          </div>
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingRoot()}
+            src={root}
+            title="点"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingLine()}
+            src={line}
+            title="直线"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingArc()}
+            src={arc}
+            title="曲线"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingTriangle()}
+            src={triangle}
+            title="正三角形"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingRect()}
+            src={rect}
+            title="正四边形"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingCircle()}
+            src={circle}
+            title="圆"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingEllipse()}
+            src={ellipse}
+            title="椭圆"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingSector()}
+            src={sector}
+            title="扇形"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingDroplet()}
+            src={droplet}
+            title="水滴"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingPolygon()}
+            src={polygon}
+            title="正多边形"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingStar()}
+            src={star}
+            title="多角星"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+        </div>
+        <div className="drawing_box">
+          <canvas id="drawing_canvas" height="600px" width="800px" />
+        </div>
+        <div className="control_box">
+          {/* <div className="clear_drawing">
+            <Button>删除该图形</Button>
+          </div> */}
+          {this.controlSector() ? this.controlSector() : "点击创建图形进行编辑"}
+        </div>
+      </div>
+    );
+  }
+}
+
+export default Drawing;

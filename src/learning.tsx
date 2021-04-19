@@ -1,12 +1,12 @@
-import react from 'react';
-import Rout  from './router';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { connect } from 'react-redux';
+import react from "react";
+import Rout from "./router";
+import { BrowserRouter as Router } from "react-router-dom";
+import { connect } from "react-redux";
 
 class Learning extends react.Component<any, any> {
   constructor(props: any) {
     super(props);
-    this.state = {}
+    this.state = {};
   }
 
   componentDidMount() {
@@ -14,21 +14,21 @@ class Learning extends react.Component<any, any> {
   }
 
   render() {
-    return(
-        <Router>
-            <div onClick={() => console.log(this.props)}>
-                <Rout></Rout>
-            </div>
-        </Router>
-    )
+    return (
+      <Router>
+        <div>
+          <Rout></Rout>
+        </div>
+      </Router>
+    );
   }
 }
 
-const mapStateToProps = (state: any) => { 
+const mapStateToProps = (state: any) => {
   return {
-    store: state 
-  } 
-}   
+    store: state,
+  };
+};
 const Learnings = connect(mapStateToProps)(Learning);
 
 export default Learnings;

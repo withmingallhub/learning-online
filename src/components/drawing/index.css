@@ -1,0 +1,27 @@
+.geometry {
+  height: 600px;
+  width: 200px;
+  border: 1px solid black;
+}
+.clear_drawing {
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.geometry_image {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+:hover .geometry_image {
+  cursor: pointer;
+}
+.drawing_box {
+  width: 800px;
+  height: 600px;
+  border: 1px solid black;
+}
+.control_box {
+  height: 600px;
+  width: 200px;
+  border: 1px solid black;
+}
