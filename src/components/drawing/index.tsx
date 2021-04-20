@@ -1,16 +1,27 @@
 import react from "react";
-import { Button, Input } from "antd";
+import { Button, Input, InputNumber } from "antd";
 import circle from "./image/circle.png";
+import circleDotted from "./image/circleDotted.png";
 import line from "./image/line.png";
+import lineDotted from "./image/lineDotted.png";
 import ellipse from "./image/ellipse.png";
+import ellipseDotted from "./image/ellipseDotted.png";
 import rect from "./image/rect.png";
+import rectDotted from "./image/rectDotted.png";
 import sector from "./image/sector.png";
+import sectorDotted from "./image/sectorDotted.png";
 import droplet from "./image/droplet.png";
+import dropletDotted from "./image/dropletDotted.png";
 import arc from "./image/arc.png";
+import arcDotted from "./image/arcDotted.png";
 import triangle from "./image/triangle.png";
+import triangleDotted from "./image/triangleDotted.png";
 import polygon from "./image/polygon.png";
+import polygonDotted from "./image/polygonDotted.png";
 import star from "./image/star.png";
+import starDotted from "./image/starDotted.png";
 import root from "./image/root.png";
+import text from "./image/text.png";
 import "./index.css";
 const zrender = require("zrender");
 
@@ -25,6 +36,11 @@ interface DrawingState {
   controlCircle: any;
   controlEllipse: any;
   controlSector: any;
+  controlDroplet: any;
+  controlPolygon: any;
+  controlStar: any;
+  controlText: any;
+  textFont: number[];
   isControl: boolean;
 }
 
@@ -91,6 +107,34 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
         r: 0,
         rotation: 0,
       },
+      controlDroplet: {
+        cx: 0,
+        cy: 0,
+        width: 0,
+        height: 0,
+        rotation: 0,
+      },
+      controlPolygon: {
+        x: 0,
+        y: 0,
+        r: 0,
+        n: 0,
+        rotation: 0,
+      },
+      controlStar: {
+        cx: 0,
+        cy: 0,
+        r: 0,
+        n: 0,
+        r0: 0,
+        rotation: 0,
+      },
+      controlText: {
+        text: "",
+        textFontSize: 0,
+        rotation: 0,
+      },
+      textFont: [10, 12, 14, 16, 18, 20, 22, 24, 26, 28],
       isControl: false,
     };
   }
@@ -109,6 +153,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   redrawing() {
     zrender.dispose(this.canvasInit);
     this.drawingInit();
+    this.setState({
+      isControl: false,
+    });
   }
 
   // 点
@@ -130,6 +177,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     this.drawingArray[key].on("click", (e) => {
       const { shape } = e.target;
       this.setState({
+        isControl: true,
         drawingId: e.target.id,
         controlRoot: {
           r: shape.r,
@@ -191,7 +239,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     });
     this.drawingArray[key].on("click", (e) => {
       const { shape } = e.target;
+      console.log(e);
       this.setState({
+        isControl: true,
         drawingId: e.target.id,
         controlLine: {
           x1: shape.x1,
@@ -287,6 +337,41 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     });
   }
 
+  // 虚线
+  drawingLineDotted() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Line({
+      id: key,
+      shape: {
+        x1: 100,
+        y1: 200,
+        x2: 200,
+        y2: 200,
+        type: "line",
+      },
+      style: {
+        fill: "none",
+        lineDash: [5, 5],
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlLine: {
+          x1: shape.x1,
+          y1: shape.y1,
+          x2: shape.x2,
+          y2: shape.y2,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
   // 曲线
   drawingArc() {
     const key = new Date().getTime().toString();
@@ -310,8 +395,54 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     this.drawingArray[key].on("click", (e) => {
       const { shape } = e.target;
       this.setState({
+        isControl: true,
         drawingId: e.target.id,
         controlArc: {
+          isControl: true,
+          cx: shape.cx,
+          cy: shape.cy,
+          r: shape.r,
+          startAngle: parseInt(
+            (((shape.startAngle - Math.PI) * 180) / Math.PI).toString()
+          ),
+          endAngle: parseInt(
+            (((shape.endAngle - Math.PI) * 180) / Math.PI).toString()
+          ),
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 虚线曲线
+  drawingArcDotted() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Arc({
+      id: key,
+      shape: {
+        cx: 120,
+        cy: 120,
+        r: 30,
+        startAngle: Math.PI * 1.25,
+        endAngle: Math.PI + (Math.PI * 125) / 180,
+        clockwise: true,
+        type: "arc",
+      },
+      style: {
+        fill: "none",
+        lineDash: [5, 5],
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      console.log("aaaaa");
+      const { shape } = e.target;
+      this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlArc: {
+          isControl: true,
           cx: shape.cx,
           cy: shape.cy,
           r: shape.r,
@@ -445,6 +576,40 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       const { shape } = e.target;
       console.log(e);
       this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlTriangle: {
+          r: shape.r,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 虚线正三角形
+  drawingTriangleDotted() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Isogon({
+      id: key,
+      shape: {
+        x: 120,
+        y: 120,
+        r: 19, // 外切圆半径
+        n: 3,
+        type: "triangle",
+      },
+      style: {
+        fill: "none",
+        lineDash: [5, 5],
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      console.log(e);
+      this.setState({
+        isControl: true,
         drawingId: e.target.id,
         controlTriangle: {
           r: shape.r,
@@ -523,6 +688,43 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     this.drawingArray[key].on("click", (e) => {
       const { shape } = e.target;
       this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlRect: {
+          x: shape.x,
+          y: shape.y,
+          width: shape.width,
+          height: shape.height,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 虚线四边形
+  drawingRectDotted() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Rect({
+      id: key,
+      shape: {
+        r: [0, 0, 0, 0],
+        x: 120,
+        y: 120,
+        width: 70,
+        height: 40,
+        type: "rect",
+      },
+      style: {
+        fill: "none",
+        lineDash: [5, 5],
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      this.setState({
+        isControl: true,
         drawingId: e.target.id,
         controlRect: {
           x: shape.x,
@@ -638,6 +840,42 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       (e: any) => {
         const { shape } = e.target;
         this.setState({
+          isControl: true,
+          drawingId: e.target.id,
+          controlCircle: {
+            r: shape.r,
+          },
+        });
+      },
+      this.context
+    );
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 虚线圆
+  drawingCircleDotted() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Circle({
+      shape: {
+        cx: 200,
+        cy: 50,
+        r: 16,
+        type: "circle",
+      },
+      style: {
+        fill: "none",
+        lineDash: [5, 5],
+        stroke: "black",
+      },
+      id: key,
+      draggable: true,
+    });
+    this.drawingArray[key].on(
+      "click",
+      (e: any) => {
+        const { shape } = e.target;
+        this.setState({
+          isControl: true,
           drawingId: e.target.id,
           controlCircle: {
             r: shape.r,
@@ -700,6 +938,42 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     this.drawingArray[key].on("click", (e) => {
       const { shape } = e.target;
       this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlEllipse: {
+          cx: shape.cx,
+          cy: shape.cy,
+          rx: shape.rx,
+          ry: shape.ry,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  //虚线椭圆
+  drawingEllipseDotted() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Ellipse({
+      id: key,
+      shape: {
+        cx: 150,
+        cy: 200,
+        rx: 50,
+        ry: 35,
+        type: "ellipse",
+      },
+      style: {
+        fill: "none",
+        lineDash: [5, 5],
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      this.setState({
+        isControl: true,
         drawingId: e.target.id,
         controlEllipse: {
           cx: shape.cx,
@@ -817,6 +1091,50 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       const { shape } = e.target;
       console.log(shape);
       this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlSector: {
+          cx: shape.cx,
+          cy: shape.cy,
+          r: shape.r,
+          startAngle: parseInt(
+            (((shape.startAngle - Math.PI) * 180) / Math.PI).toString()
+          ),
+          endAngle: parseInt(
+            (((shape.endAngle - Math.PI) * 180) / Math.PI).toString()
+          ),
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 虚线扇形
+  drawingSectorDotted() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Sector({
+      id: key,
+      shape: {
+        cx: 200,
+        cy: 100,
+        r: 60,
+        startAngle: Math.PI,
+        endAngle: Math.PI + (Math.PI * 90) / 180,
+        clockwise: true,
+        type: "sector",
+      },
+      style: {
+        fill: "none",
+        lineDash: [5, 5],
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      console.log(shape);
+      this.setState({
+        isControl: true,
         drawingId: e.target.id,
         controlSector: {
           cx: shape.cx,
@@ -904,7 +1222,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
         <br />
         旋转角度
         <Input
-          value={isNaN(rotation) ? 0 : rotation}
+          value={isNaN(rotation) ? "" : rotation}
           onChange={(value) => {
             const { controlSector } = this.state;
             controlSector.rotation = parseInt(value.target.value);
@@ -954,9 +1272,111 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       draggable: true,
     });
     this.drawingArray[key].on("click", (e) => {
-      console.log("aa", e);
+      const { shape } = e.target;
+      this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlDroplet: {
+          cx: shape.cx,
+          cy: shape.cy,
+          width: shape.width,
+          height: shape.height,
+        },
+      });
     });
     this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 虚线水滴
+  drawingDropletDotted() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Droplet({
+      id: key,
+      shape: {
+        cx: 130,
+        cy: 80,
+        width: 20,
+        height: 40,
+        type: "droplet",
+      },
+      style: {
+        fill: "none",
+        lineDash: [5, 5],
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlDroplet: {
+          cx: shape.cx,
+          cy: shape.cy,
+          width: shape.width,
+          height: shape.height,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  controlDroplet() {
+    const { width, height, rotation } = this.state.controlDroplet;
+    return (
+      <div>
+        水滴横向半径
+        <Input
+          value={isNaN(width) ? "" : width}
+          onChange={(value) => {
+            const { controlDroplet } = this.state;
+            controlDroplet.width = parseInt(value.target.value);
+            this.setState({
+              controlDroplet: controlDroplet,
+            });
+          }}
+        />
+        水滴纵向半径
+        <Input
+          value={isNaN(height) ? "" : height}
+          onChange={(value) => {
+            const { controlDroplet } = this.state;
+            controlDroplet.height = parseInt(value.target.value);
+            this.setState({
+              controlDroplet: controlDroplet,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlDropletInfo()}>确认</Button>
+        <br />
+        旋转角度
+        <Input
+          value={isNaN(rotation) ? "" : rotation}
+          onChange={(value) => {
+            const { controlDroplet } = this.state;
+            controlDroplet.rotation = parseInt(value.target.value);
+            this.setState({
+              controlDroplet: controlDroplet,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRotaion(this.state.controlDroplet)}>
+          确认
+        </Button>
+      </div>
+    );
+  }
+
+  controlDropletInfo() {
+    const { controlDroplet } = this.state;
+    this.drawingArray[this.state.drawingId].attr({
+      shape: {
+        width: controlDroplet.width,
+        height: controlDroplet.height,
+      },
+      draggable: true,
+    });
   }
 
   // 正多边形
@@ -978,9 +1398,111 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       draggable: true,
     });
     this.drawingArray[key].on("click", (e) => {
-      console.log("aa", e);
+      const { shape } = e.target;
+      this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlPolygon: {
+          x: shape.x,
+          y: shape.y,
+          r: shape.r,
+          n: shape.n,
+        },
+      });
     });
     this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 虚线正多边形
+  drawingPolygonDotted() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Isogon({
+      id: key,
+      shape: {
+        x: 130,
+        y: 80,
+        r: 18.5, // 外切圆半径
+        n: 5,
+        type: "polygon",
+      },
+      style: {
+        fill: "none",
+        lineDash: [5, 5],
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlPolygon: {
+          x: shape.x,
+          y: shape.y,
+          r: shape.r,
+          n: shape.n,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  controlPolygon() {
+    const { r, n, rotation } = this.state.controlPolygon;
+    return (
+      <div>
+        多边形外切圆半径
+        <Input
+          value={isNaN(r) ? "" : r}
+          onChange={(value) => {
+            const { controlPolygon } = this.state;
+            controlPolygon.r = parseInt(value.target.value);
+            this.setState({
+              controlPolygon: controlPolygon,
+            });
+          }}
+        />
+        多边形边数
+        <Input
+          value={isNaN(n) ? "" : n}
+          onChange={(value) => {
+            const { controlPolygon } = this.state;
+            controlPolygon.n = parseInt(value.target.value);
+            this.setState({
+              controlPolygon: controlPolygon,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlPolygonInfo()}>确认</Button>
+        <br />
+        旋转角度
+        <Input
+          value={isNaN(rotation) ? "" : rotation}
+          onChange={(value) => {
+            const { controlPolygon } = this.state;
+            controlPolygon.rotation = parseInt(value.target.value);
+            this.setState({
+              controlPolygon: controlPolygon,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRotaion(this.state.controlPolygon)}>
+          确认
+        </Button>
+      </div>
+    );
+  }
+
+  controlPolygonInfo() {
+    const { controlPolygon } = this.state;
+    this.drawingArray[this.state.drawingId].attr({
+      shape: {
+        r: controlPolygon.r,
+        n: controlPolygon.n,
+      },
+      draggable: true,
+    });
   }
 
   // 星星
@@ -1003,9 +1525,249 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       draggable: true,
     });
     this.drawingArray[key].on("click", (e) => {
-      console.log("aa", e);
+      const { shape } = e.target;
+      this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlStar: {
+          cx: shape.cx,
+          cy: shape.cy,
+          r: shape.r,
+          r0: shape.r0,
+          n: shape.n,
+        },
+      });
     });
     this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  // 虚线星星
+  drawingStarDotted() {
+    const key = new Date().getTime().toString();
+    this.drawingArray[key] = new zrender.Star({
+      id: key,
+      shape: {
+        cx: 200,
+        cy: 80,
+        r: 36,
+        n: 5,
+        r0: 14,
+        type: "star",
+      },
+      style: {
+        fill: "none",
+        lineDash: [5, 5],
+        stroke: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { shape } = e.target;
+      this.setState({
+        isControl: true,
+        drawingId: e.target.id,
+        controlStar: {
+          cx: shape.cx,
+          cy: shape.cy,
+          r: shape.r,
+          r0: shape.r0,
+          n: shape.n,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  controlStar() {
+    const { r, r0, n, rotation } = this.state.controlStar;
+    return (
+      <div>
+        多角形外切圆半径
+        <Input
+          value={isNaN(r) ? "" : r}
+          onChange={(value) => {
+            const { controlStar } = this.state;
+            controlStar.r = parseInt(value.target.value);
+            this.setState({
+              controlStar: controlStar,
+            });
+          }}
+        />
+        多角形内切圆半径
+        <Input
+          value={isNaN(r0) ? "" : r0}
+          onChange={(value) => {
+            const { controlStar } = this.state;
+            controlStar.r0 = parseInt(value.target.value);
+            this.setState({
+              controlStar: controlStar,
+            });
+          }}
+        />
+        角数
+        <Input
+          value={isNaN(n) ? "" : n}
+          onChange={(value) => {
+            const { controlStar } = this.state;
+            controlStar.n = parseInt(value.target.value);
+            this.setState({
+              controlStar: controlStar,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlStarInfo()}>确认</Button>
+        <br />
+        旋转角度
+        <Input
+          value={isNaN(rotation) ? "" : rotation}
+          onChange={(value) => {
+            const { controlStar } = this.state;
+            controlStar.rotation = parseInt(value.target.value);
+            this.setState({
+              controlStar: controlStar,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRotaion(this.state.controlStar)}>
+          确认
+        </Button>
+      </div>
+    );
+  }
+
+  controlStarInfo() {
+    const { controlStar } = this.state;
+    this.drawingArray[this.state.drawingId].attr({
+      shape: {
+        r: controlStar.r,
+        r0: controlStar.r0,
+        n: controlStar.n,
+      },
+      draggable: true,
+    });
+  }
+
+  // 文本
+  drawingText() {
+    const key = new Date().getTime().toString();
+    console.log(key);
+    this.drawingArray[key] = new zrender.Text({
+      id: key,
+      textFontSize: 3,
+      shape: {
+        type: "text",
+      },
+      style: {
+        text: "文本",
+        fontSize: 20,
+        testFill: "black",
+      },
+      draggable: true,
+    });
+    this.drawingArray[key].on("click", (e) => {
+      const { style, parent } = e.target;
+      console.log(parent.textFontSize);
+      this.setState({
+        isControl: true,
+        drawingId: parent.id,
+        controlText: {
+          text: style.text,
+          textFontSize: parent.textFontSize,
+        },
+      });
+    });
+    this.canvasInit.add(this.drawingArray[key]);
+  }
+
+  controlText() {
+    const { text, rotation } = this.state.controlText;
+    return (
+      <div>
+        文本内容
+        <Input
+          value={text ? text : ""}
+          onChange={(value) => {
+            const { controlText } = this.state;
+            controlText.text = parseInt(value.target.value);
+            this.setState({
+              controlText: controlText,
+            });
+          }}
+        />
+        文本大小
+        <br />
+        <InputNumber
+          min={1}
+          max={10}
+          value={this.state.controlText.textFontSize}
+          onChange={(value) => {
+            const { controlText } = this.state;
+            controlText.textFontSize = value;
+            this.setState({
+              controlText: controlText,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlTextInfo()}>确认</Button>
+        <br />
+        旋转角度
+        <Input
+          value={isNaN(rotation) ? "" : rotation}
+          onChange={(value) => {
+            const { controlText } = this.state;
+            controlText.rotation = parseInt(value.target.value);
+            this.setState({
+              controlText: controlText,
+            });
+          }}
+        />
+        <Button onClick={() => this.controlRotaion(this.state.controlText)}>
+          确认
+        </Button>
+      </div>
+    );
+  }
+
+  controlTextInfo() {
+    const { controlText } = this.state;
+    const font =
+      this.state.textFont[this.state.controlText.textFontSize - 1] + "px";
+    this.drawingArray[this.state.drawingId].attr({
+      style: {
+        text: controlText.text,
+        fontSize: font,
+      },
+      draggable: true,
+    });
+  }
+
+  control() {
+    switch (this.drawingArray[this.state.drawingId].shape.type) {
+      case "root":
+        return this.controlRoot();
+      case "line":
+        return this.controlLine();
+      case "arc":
+        return this.controlArc();
+      case "triangle":
+        return this.controlTriangle();
+      case "rect":
+        return this.controlRect();
+      case "circle":
+        return this.controlCircle();
+      case "ellipse":
+        return this.controlEllipse();
+      case "sector":
+        return this.controlSector();
+      case "droplet":
+        return this.controlDroplet();
+      case "polygon":
+        return this.controlPolygon();
+      case "star":
+        return this.controlStar();
+      case "text":
+        return this.controlText();
+    }
   }
 
   // 图形旋转
@@ -1042,6 +1804,26 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
         xSize = shape2.cx;
         ySize = shape2.cy;
         break;
+      case "droplet":
+        const shape3 = this.drawingArray[this.state.drawingId].shape;
+        xSize = shape3.cx;
+        ySize = shape3.cy;
+        break;
+      case "polygon":
+        const shape4 = this.drawingArray[this.state.drawingId].shape;
+        xSize = shape4.x;
+        ySize = shape4.y;
+        break;
+      case "star":
+        const shape5 = this.drawingArray[this.state.drawingId].shape;
+        xSize = shape5.cx;
+        ySize = shape5.cy;
+        break;
+      case "text":
+        this.drawingArray[this.state.drawingId].attr({
+          rotation: (Math.PI * control.rotation) / 180,
+        });
+        return;
     }
 
     this.drawingArray[this.state.drawingId].attr({
@@ -1161,6 +1943,105 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             height="49.5px"
             width="49.5px"
           />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingLineDotted()}
+            src={lineDotted}
+            title="虚线"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingArcDotted()}
+            src={arcDotted}
+            title="虚线曲线"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingTriangleDotted()}
+            src={triangleDotted}
+            title="虚线正三角形"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingRectDotted()}
+            src={rectDotted}
+            title="虚线正四边形"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingCircleDotted()}
+            src={circleDotted}
+            title="虚线圆"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingEllipseDotted()}
+            src={ellipseDotted}
+            title="虚线椭圆"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingSectorDotted()}
+            src={sectorDotted}
+            title="虚线扇形"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingDropletDotted()}
+            src={dropletDotted}
+            title="虚线水滴"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingPolygonDotted()}
+            src={polygonDotted}
+            title="虚线正多边形"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingStarDotted()}
+            src={starDotted}
+            title="虚线多角星"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
+          <img
+            className="geometry_image"
+            onClick={() => this.drawingText()}
+            src={text}
+            title="文本"
+            alt=""
+            height="49.5px"
+            width="49.5px"
+          />
         </div>
         <div className="drawing_box">
           <canvas id="drawing_canvas" height="600px" width="800px" />
@@ -1169,7 +2050,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
           {/* <div className="clear_drawing">
             <Button>删除该图形</Button>
           </div> */}
-          {this.controlSector() ? this.controlSector() : "点击创建图形进行编辑"}
+          {this.state.isControl ? this.control() : "点击创建图形进行编辑"}
         </div>
       </div>
     );
