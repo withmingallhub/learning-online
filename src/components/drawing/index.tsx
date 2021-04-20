@@ -1,5 +1,7 @@
+import GetColor from "./getColor";
 import react from "react";
 import { Button, Input, InputNumber } from "antd";
+import { DownloadOutlined } from "@ant-design/icons";
 import circle from "./image/circle.png";
 import circleDotted from "./image/circleDotted.png";
 import line from "./image/line.png";
@@ -146,6 +148,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   // 初始化画板
   drawingInit() {
     this.drawingCanvas = document.getElementById("drawing_canvas");
+    var context = this.drawingCanvas.getContext("2d");
+    context.fillStyle = "green";
+    context.fillRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
     this.canvasInit = zrender.init(this.drawingCanvas);
   }
 
@@ -191,9 +196,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   controlRoot() {
     const { r } = this.state.controlRoot;
     return (
-      <div>
-        点半径
+      <div className="pic_controls">
+        <span className="pic_font_size">点半径</span>
         <Input
+          size="small"
           value={isNaN(r) ? 0 : r}
           onChange={(value) => {
             const { controlRoot } = this.state;
@@ -203,7 +209,11 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRootInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button size="small" onClick={() => this.controlRootInfo()}>
+            确认
+          </Button>
+        </div>
       </div>
     );
   }
@@ -239,7 +249,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     });
     this.drawingArray[key].on("click", (e) => {
       const { shape } = e.target;
-      console.log(e);
       this.setState({
         isControl: true,
         drawingId: e.target.id,
@@ -258,9 +267,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   controlLine() {
     const { x1, y1, x2, y2, rotation } = this.state.controlLine;
     return (
-      <div>
-        初始X坐标
+      <div className="pic_controls">
+        <span className="pic_font_size">初始X坐标</span>
         <Input
+          size="small"
           value={isNaN(x1) ? "" : x1}
           onChange={(value) => {
             const { controlLine } = this.state;
@@ -270,8 +280,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        初始Y坐标
+        <span className="pic_font_size">初始Y坐标</span>
         <Input
+          size="small"
           value={isNaN(y1) ? "" : y1}
           onChange={(value) => {
             const { controlLine } = this.state;
@@ -281,8 +292,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        终点X坐标
+        <span className="pic_font_size">终点X坐标</span>
         <Input
+          size="small"
           value={isNaN(x2) ? "" : x2}
           onChange={(value) => {
             const { controlLine } = this.state;
@@ -292,8 +304,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        终点Y坐标
+        <span className="pic_font_size">终点Y坐标</span>
         <Input
+          size="small"
           value={isNaN(y2) ? "" : y2}
           onChange={(value) => {
             const { controlLine } = this.state;
@@ -303,10 +316,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlLineInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlLineInfo()}>确认</Button>
+        </div>
         <br />
-        旋转角度
+        <span className="pic_font_size">旋转角度</span>
         <Input
+          size="small"
           value={isNaN(rotation) ? "" : rotation}
           onChange={(value) => {
             const { controlLine } = this.state;
@@ -316,9 +332,11 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRotaion(this.state.controlLine)}>
-          确认
-        </Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlRotaion(this.state.controlLine)}>
+            确认
+          </Button>
+        </div>
       </div>
     );
   }
@@ -436,7 +454,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       draggable: true,
     });
     this.drawingArray[key].on("click", (e) => {
-      console.log("aaaaa");
       const { shape } = e.target;
       this.setState({
         isControl: true,
@@ -462,9 +479,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   controlArc() {
     const { cx, cy, startAngle, endAngle, rotation, r } = this.state.controlArc;
     return (
-      <div>
-        圆心横坐标
+      <div className="pic_controls">
+        <span className="pic_font_size">圆心横坐标</span>
         <Input
+          size="small"
           value={isNaN(cx) ? "" : cx}
           onChange={(value) => {
             const { controlArc } = this.state;
@@ -474,8 +492,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        圆心纵坐标
+        <span className="pic_font_size">圆心纵坐标</span>
         <Input
+          size="small"
           value={isNaN(cy) ? "" : cy}
           onChange={(value) => {
             const { controlArc } = this.state;
@@ -485,8 +504,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        曲线半径
+        <span className="pic_font_size">曲线半径</span>
         <Input
+          size="small"
           value={isNaN(r) ? "" : r}
           onChange={(value) => {
             const { controlArc } = this.state;
@@ -496,8 +516,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        起始角度
+        <span className="pic_font_size">起始角度</span>
         <Input
+          size="small"
           value={isNaN(startAngle) ? "" : startAngle}
           onChange={(value) => {
             const { controlArc } = this.state;
@@ -507,8 +528,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        终点角度
+        <span className="pic_font_size">终点角度</span>
         <Input
+          size="small"
           value={isNaN(endAngle) ? "" : endAngle}
           onChange={(value) => {
             const { controlArc } = this.state;
@@ -518,10 +540,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlArcInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlArcInfo()}>确认</Button>
+        </div>
         <br />
-        旋转角度
+        <span className="pic_font_size">旋转角度</span>
         <Input
+          size="small"
           value={isNaN(rotation) ? 0 : rotation}
           onChange={(value) => {
             const { controlArc } = this.state;
@@ -531,9 +556,11 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRotaion(this.state.controlArc)}>
-          确认
-        </Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlRotaion(this.state.controlArc)}>
+            确认
+          </Button>
+        </div>
       </div>
     );
   }
@@ -541,7 +568,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   // 更新曲线视图
   controlArcInfo() {
     const { controlArc } = this.state;
-    console.log(controlArc);
     this.drawingArray[this.state.drawingId].attr({
       shape: {
         cx: controlArc.cx,
@@ -574,7 +600,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     });
     this.drawingArray[key].on("click", (e) => {
       const { shape } = e.target;
-      console.log(e);
       this.setState({
         isControl: true,
         drawingId: e.target.id,
@@ -607,7 +632,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     });
     this.drawingArray[key].on("click", (e) => {
       const { shape } = e.target;
-      console.log(e);
       this.setState({
         isControl: true,
         drawingId: e.target.id,
@@ -623,9 +647,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   controlTriangle() {
     const { r, rotation } = this.state.controlTriangle;
     return (
-      <div>
+      <div className="pic_controls">
         正三角形半径
         <Input
+          size="small"
           value={isNaN(r) ? "" : r}
           onChange={(value) => {
             const { controlTriangle } = this.state;
@@ -635,10 +660,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlTriangleInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlTriangleInfo()}>确认</Button>
+        </div>
         <br />
         旋转角度
         <Input
+          size="small"
           value={isNaN(rotation) ? 0 : rotation}
           onChange={(value) => {
             const { controlTriangle } = this.state;
@@ -648,9 +676,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRotaion(this.state.controlTriangle)}>
-          确认
-        </Button>
+        <div className="pic_submit">
+          <Button
+            onClick={() => this.controlRotaion(this.state.controlTriangle)}
+          >
+            确认
+          </Button>
+        </div>
       </div>
     );
   }
@@ -740,9 +772,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   controlRect() {
     const { x, y, width, height, rotation } = this.state.controlRect;
     return (
-      <div>
-        正四边形左上角横坐标
+      <div className="pic_controls">
+        <span className="pic_font_size">正四边形左上角横坐标</span>
         <Input
+          size="small"
           value={isNaN(x) ? "" : x}
           onChange={(value) => {
             const { controlRect } = this.state;
@@ -752,8 +785,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        正四边形左上角纵坐标
+        <span className="pic_font_size">正四边形左上角纵坐标</span>
         <Input
+          size="small"
           value={isNaN(y) ? "" : y}
           onChange={(value) => {
             const { controlRect } = this.state;
@@ -763,8 +797,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        正四边形宽度
+        <span className="pic_font_size">正四边形宽度</span>
         <Input
+          size="small"
           value={isNaN(width) ? "" : width}
           onChange={(value) => {
             const { controlRect } = this.state;
@@ -774,8 +809,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        正四边形高度
+        <span className="pic_font_size">正四边形高度</span>
         <Input
+          size="small"
           value={isNaN(height) ? "" : height}
           onChange={(value) => {
             const { controlRect } = this.state;
@@ -785,10 +821,14 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRectInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlRectInfo()}>确认</Button>
+        </div>
+
         <br />
-        旋转角度
+        <span className="pic_font_size">旋转角度</span>
         <Input
+          size="small"
           value={isNaN(rotation) ? "" : rotation}
           onChange={(value) => {
             const { controlRect } = this.state;
@@ -798,9 +838,11 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRotaion(this.state.controlRect)}>
-          确认
-        </Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlRotaion(this.state.controlRect)}>
+            确认
+          </Button>
+        </div>
       </div>
     );
   }
@@ -890,9 +932,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   controlCircle() {
     const { r } = this.state.controlCircle;
     return (
-      <div>
-        圆半径
+      <div className="pic_controls">
+        <span className="pic_font_size">圆半径</span>
         <Input
+          size="small"
           value={isNaN(r) ? "" : r}
           onChange={(value) => {
             const { controlCircle } = this.state;
@@ -902,7 +945,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlCircleInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlCircleInfo()}>确认</Button>
+        </div>
       </div>
     );
   }
@@ -989,9 +1034,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   controlEllipse() {
     const { cx, cy, rx, ry, rotation } = this.state.controlEllipse;
     return (
-      <div>
-        椭圆心横坐标
+      <div className="pic_controls">
+        <span className="pic_font_size">椭圆心横坐标</span>
         <Input
+          size="small"
           value={isNaN(cx) ? "" : cx}
           onChange={(value) => {
             const { controlEllipse } = this.state;
@@ -1001,8 +1047,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        椭圆心纵坐标
+        <span className="pic_font_size">椭圆心纵坐标</span>
         <Input
+          size="small"
           value={isNaN(cy) ? "" : cy}
           onChange={(value) => {
             const { controlEllipse } = this.state;
@@ -1012,8 +1059,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        椭圆横半径
+        <span className="pic_font_size">椭圆横半径</span>
         <Input
+          size="small"
           value={isNaN(rx) ? "" : rx}
           onChange={(value) => {
             const { controlEllipse } = this.state;
@@ -1023,8 +1071,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        椭圆纵半径
+        <span className="pic_font_size">椭圆纵半径</span>
         <Input
+          size="small"
           value={isNaN(ry) ? "" : ry}
           onChange={(value) => {
             const { controlEllipse } = this.state;
@@ -1034,10 +1083,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlEllipseInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlEllipseInfo()}>确认</Button>
+        </div>
         <br />
-        旋转角度
+        <span className="pic_font_size">旋转角度</span>
         <Input
+          size="small"
           value={isNaN(rotation) ? "" : rotation}
           onChange={(value) => {
             const { controlEllipse } = this.state;
@@ -1047,9 +1099,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRotaion(this.state.controlEllipse)}>
-          确认
-        </Button>
+        <div className="pic_submit">
+          <Button
+            onClick={() => this.controlRotaion(this.state.controlEllipse)}
+          >
+            确认
+          </Button>
+        </div>
       </div>
     );
   }
@@ -1089,7 +1145,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     });
     this.drawingArray[key].on("click", (e) => {
       const { shape } = e.target;
-      console.log(shape);
       this.setState({
         isControl: true,
         drawingId: e.target.id,
@@ -1132,7 +1187,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     });
     this.drawingArray[key].on("click", (e) => {
       const { shape } = e.target;
-      console.log(shape);
       this.setState({
         isControl: true,
         drawingId: e.target.id,
@@ -1162,9 +1216,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       r,
     } = this.state.controlSector;
     return (
-      <div>
-        圆心横坐标
+      <div className="pic_controls">
+        <span className="pic_font_size">圆心横坐标</span>
         <Input
+          size="small"
           value={isNaN(cx) ? "" : cx}
           onChange={(value) => {
             const { controlSector } = this.state;
@@ -1174,8 +1229,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        圆心纵坐标
+        <span className="pic_font_size">圆心纵坐标</span>
         <Input
+          size="small"
           value={isNaN(cy) ? "" : cy}
           onChange={(value) => {
             const { controlSector } = this.state;
@@ -1185,8 +1241,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        扇形半径
+        <span className="pic_font_size">扇形半径</span>
         <Input
+          size="small"
           value={isNaN(r) ? "" : r}
           onChange={(value) => {
             const { controlSector } = this.state;
@@ -1196,8 +1253,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        起始角度
+        <span className="pic_font_size">起始角度</span>
         <Input
+          size="small"
           value={isNaN(startAngle) ? "" : startAngle}
           onChange={(value) => {
             const { controlSector } = this.state;
@@ -1207,8 +1265,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        终点角度
+        <span className="pic_font_size">终点角度</span>
         <Input
+          size="small"
           value={isNaN(endAngle) ? "" : endAngle}
           onChange={(value) => {
             const { controlSector } = this.state;
@@ -1218,10 +1277,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlSectorInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlSectorInfo()}>确认</Button>
+        </div>
         <br />
-        旋转角度
+        <span className="pic_font_size">旋转角度</span>
         <Input
+          size="small"
           value={isNaN(rotation) ? "" : rotation}
           onChange={(value) => {
             const { controlSector } = this.state;
@@ -1231,16 +1293,17 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRotaion(this.state.controlSector)}>
-          确认
-        </Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlRotaion(this.state.controlSector)}>
+            确认
+          </Button>
+        </div>
       </div>
     );
   }
 
   controlSectorInfo() {
     const { controlSector } = this.state;
-    console.log(controlSector);
     this.drawingArray[this.state.drawingId].attr({
       shape: {
         cx: controlSector.cx,
@@ -1325,9 +1388,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   controlDroplet() {
     const { width, height, rotation } = this.state.controlDroplet;
     return (
-      <div>
-        水滴横向半径
+      <div className="pic_controls">
+        <span className="pic_font_size">水滴横向半径</span>
         <Input
+          size="small"
           value={isNaN(width) ? "" : width}
           onChange={(value) => {
             const { controlDroplet } = this.state;
@@ -1337,8 +1401,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        水滴纵向半径
+        <span className="pic_font_size">水滴纵向半径</span>
         <Input
+          size="small"
           value={isNaN(height) ? "" : height}
           onChange={(value) => {
             const { controlDroplet } = this.state;
@@ -1348,10 +1413,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlDropletInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlDropletInfo()}>确认</Button>
+        </div>
         <br />
-        旋转角度
+        <span className="pic_font_size">旋转角度</span>
         <Input
+          size="small"
           value={isNaN(rotation) ? "" : rotation}
           onChange={(value) => {
             const { controlDroplet } = this.state;
@@ -1361,9 +1429,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRotaion(this.state.controlDroplet)}>
-          确认
-        </Button>
+        <div className="pic_submit">
+          <Button
+            onClick={() => this.controlRotaion(this.state.controlDroplet)}
+          >
+            确认
+          </Button>
+        </div>
       </div>
     );
   }
@@ -1451,9 +1523,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   controlPolygon() {
     const { r, n, rotation } = this.state.controlPolygon;
     return (
-      <div>
-        多边形外切圆半径
+      <div className="pic_controls">
+        <span className="pic_font_size">多边形外切圆半径</span>
         <Input
+          size="small"
           value={isNaN(r) ? "" : r}
           onChange={(value) => {
             const { controlPolygon } = this.state;
@@ -1463,8 +1536,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        多边形边数
+        <span className="pic_font_size">多边形边数</span>
         <Input
+          size="small"
           value={isNaN(n) ? "" : n}
           onChange={(value) => {
             const { controlPolygon } = this.state;
@@ -1474,10 +1548,14 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlPolygonInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlPolygonInfo()}>确认</Button>
+        </div>
+
         <br />
-        旋转角度
+        <span className="pic_font_size">旋转角度</span>
         <Input
+          size="small"
           value={isNaN(rotation) ? "" : rotation}
           onChange={(value) => {
             const { controlPolygon } = this.state;
@@ -1487,9 +1565,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRotaion(this.state.controlPolygon)}>
-          确认
-        </Button>
+        <div className="pic_submit">
+          <Button
+            onClick={() => this.controlRotaion(this.state.controlPolygon)}
+          >
+            确认
+          </Button>
+        </div>
       </div>
     );
   }
@@ -1581,9 +1663,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   controlStar() {
     const { r, r0, n, rotation } = this.state.controlStar;
     return (
-      <div>
-        多角形外切圆半径
+      <div className="pic_controls">
+        <span className="pic_font_size">多角形外切圆半径</span>
         <Input
+          size="small"
           value={isNaN(r) ? "" : r}
           onChange={(value) => {
             const { controlStar } = this.state;
@@ -1593,8 +1676,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        多角形内切圆半径
+        <span className="pic_font_size">多角形内切圆半径</span>
         <Input
+          size="small"
           value={isNaN(r0) ? "" : r0}
           onChange={(value) => {
             const { controlStar } = this.state;
@@ -1604,8 +1688,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        角数
+        <span className="pic_font_size">角数</span>
         <Input
+          size="small"
           value={isNaN(n) ? "" : n}
           onChange={(value) => {
             const { controlStar } = this.state;
@@ -1615,10 +1700,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlStarInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlStarInfo()}>确认</Button>
+        </div>
         <br />
-        旋转角度
+        <span className="pic_font_size">旋转角度</span>
         <Input
+          size="small"
           value={isNaN(rotation) ? "" : rotation}
           onChange={(value) => {
             const { controlStar } = this.state;
@@ -1628,9 +1716,11 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRotaion(this.state.controlStar)}>
-          确认
-        </Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlRotaion(this.state.controlStar)}>
+            确认
+          </Button>
+        </div>
       </div>
     );
   }
@@ -1650,7 +1740,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   // 文本
   drawingText() {
     const key = new Date().getTime().toString();
-    console.log(key);
     this.drawingArray[key] = new zrender.Text({
       id: key,
       textFontSize: 3,
@@ -1660,13 +1749,12 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       style: {
         text: "文本",
         fontSize: 20,
-        testFill: "black",
+        fill: "black",
       },
       draggable: true,
     });
     this.drawingArray[key].on("click", (e) => {
       const { style, parent } = e.target;
-      console.log(parent.textFontSize);
       this.setState({
         isControl: true,
         drawingId: parent.id,
@@ -1683,8 +1771,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     const { text, rotation } = this.state.controlText;
     return (
       <div>
-        文本内容
+        <span className="pic_font_size">文本内容</span>
         <Input
+          size="small"
           value={text ? text : ""}
           onChange={(value) => {
             const { controlText } = this.state;
@@ -1694,7 +1783,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        文本大小
+        <span className="pic_font_size">文本大小</span>
         <br />
         <InputNumber
           min={1}
@@ -1708,10 +1797,14 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlTextInfo()}>确认</Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlTextInfo()}>确认</Button>
+        </div>
+
         <br />
-        旋转角度
+        <span className="pic_font_size">旋转角度</span>
         <Input
+          size="small"
           value={isNaN(rotation) ? "" : rotation}
           onChange={(value) => {
             const { controlText } = this.state;
@@ -1721,9 +1814,11 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             });
           }}
         />
-        <Button onClick={() => this.controlRotaion(this.state.controlText)}>
-          确认
-        </Button>
+        <div className="pic_submit">
+          <Button onClick={() => this.controlRotaion(this.state.controlText)}>
+            确认
+          </Button>
+        </div>
       </div>
     );
   }
@@ -1742,6 +1837,35 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   }
 
   control() {
+    const zr = this.drawingArray[this.state.drawingId];
+    let color;
+    if (zr.shape.type === "root" || zr.shape.type === "text")
+      color = zr.style.fill;
+    else color = zr.style.stroke;
+    return (
+      <div className="controls">
+        <div className="control_top">
+          <GetColor
+            style={{ verticalAlign: "middle" }}
+            color={color} //编辑的时候，用于颜色的回显
+            objKey={this.drawingArray[this.state.drawingId].id} //因页面多次使用，传入key值，用于区分色块更新，因key是关键字，这里使用了objKey作为属性名
+            updateColor={(e, value) => this.updateColor(e, value)}
+          />
+          <Button
+            danger
+            onClick={() => this.deleteDrawing(this.state.drawingId)}
+          >
+            删除
+          </Button>
+        </div>
+
+        {this.controlMain()}
+      </div>
+    );
+  }
+
+  // 根据当前图形返回相应的操作台
+  controlMain() {
     switch (this.drawingArray[this.state.drawingId].shape.type) {
       case "root":
         return this.controlRoot();
@@ -1832,17 +1956,58 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     });
   }
 
+  // 更新颜色
+  updateColor(key, value) {
+    switch (this.drawingArray[key].shape.type) {
+      case "root":
+        this.drawingArray[key].attr({
+          style: {
+            fill: value,
+          },
+        });
+        break;
+      case "text":
+        this.drawingArray[key].attr({
+          style: {
+            fill: value,
+          },
+        });
+        break;
+      default:
+        this.drawingArray[key].attr({
+          style: {
+            stroke: value,
+          },
+        });
+    }
+  }
+
+  deleteDrawing(key) {
+    this.drawingArray[key].hide();
+    this.setState({
+      isControl: false,
+    });
+  }
+
+  // 下载画布
+  getCanvasImg() {
+    let canvas = document.querySelector("#drawing_canvas") as HTMLCanvasElement;
+    if (canvas) {
+      var save_url = canvas.toDataURL("image/png");
+      var a = document.createElement("a");
+      document.body.appendChild(a);
+      a.href = save_url;
+      a.download = "canvasPicture";
+      a.click();
+    }
+  }
+
   render() {
     return (
       <div style={{ display: "flex" }}>
-        <div
-          // onClick={() => {
-          //   this.drawingArray["111111"].hide();
-          // }}
-          className="geometry"
-        >
-          <div className="clear_drawing" onClick={() => this.redrawing()}>
-            <Button>清除所有图形</Button>
+        <div className="geometry">
+          <div className="clear_drawing">
+            <Button onClick={() => this.redrawing()}>清除所有图形</Button>
           </div>
           <img
             className="geometry_image"
@@ -2042,14 +2207,20 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             height="49.5px"
             width="49.5px"
           />
+          <div className="dowload_img">
+            <Button
+              type="primary"
+              icon={<DownloadOutlined />}
+              onClick={() => this.getCanvasImg()}
+            >
+              Download
+            </Button>
+          </div>
         </div>
         <div className="drawing_box">
           <canvas id="drawing_canvas" height="600px" width="800px" />
         </div>
         <div className="control_box">
-          {/* <div className="clear_drawing">
-            <Button>删除该图形</Button>
-          </div> */}
           {this.state.isControl ? this.control() : "点击创建图形进行编辑"}
         </div>
       </div>
