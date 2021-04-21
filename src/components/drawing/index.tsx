@@ -1774,10 +1774,11 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
         <span className="pic_font_size">文本内容</span>
         <Input
           size="small"
-          value={text ? text : ""}
+          value={text}
           onChange={(value) => {
+            console.log(value);
             const { controlText } = this.state;
-            controlText.text = parseInt(value.target.value);
+            controlText.text = value.target.value;
             this.setState({
               controlText: controlText,
             });
@@ -2221,7 +2222,13 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
           <canvas id="drawing_canvas" height="600px" width="800px" />
         </div>
         <div className="control_box">
-          {this.state.isControl ? this.control() : "点击创建图形进行编辑"}
+          {this.state.isControl ? (
+            this.control()
+          ) : (
+            <p style={{ textAlign: "center", marginTop: "20px " }}>
+              点击创建图形进行编辑
+            </p>
+          )}
         </div>
       </div>
     );
