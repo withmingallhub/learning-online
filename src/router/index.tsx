@@ -6,6 +6,7 @@ import StudentMain from "../components/student/studentMain";
 import Recorders from "../components/recorder/index";
 import VedioFather from "../components/vedio-play/vedioFather";
 import DrawingFather from "../components/drawing/drawingFather";
+import AnimationFather from "../components/animation/animation";
 
 function Rout() {
   return (
@@ -16,6 +17,7 @@ function Rout() {
       <Route path="/audio" component={Recorders}></Route>
       <Route path="/vedio" component={VedioFather}></Route>
       <Route path="/drawing" component={DrawingFather}></Route>
+      <Route path="/animation" component={AnimationFather}></Route>
     </>
   );
 }

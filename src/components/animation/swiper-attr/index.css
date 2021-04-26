@@ -1,0 +1,12 @@
+.preview-swiper-paginagion {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 25px;
+}
+.preview-swiper-box {
+  height: 100%;
+  width: 100%;
+  border: 1px solid black;
+}
