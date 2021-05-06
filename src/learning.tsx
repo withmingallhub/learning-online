@@ -16,7 +16,7 @@ class Learning extends react.Component<any, any> {
   render() {
     return (
       <Router>
-        <div onClick={() => console.log(this.props)}>
+        <div>
           <Rout></Rout>
         </div>
       </Router>
