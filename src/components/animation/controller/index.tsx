@@ -1,4 +1,6 @@
 import react from "react";
+import BraftEditor from "braft-editor";
+import "braft-editor/dist/index.css";
 import SwiperMainAttr from "../swiper-attr/index";
 import { Drawer, Button } from "antd";
 import { SwiperAttr, PaginationAttr } from "../types";
@@ -12,7 +14,6 @@ interface ControlAnimationProps {
   swiperAttr?: SwiperAttr;
 }
 interface ControlAnimationState {
-  paginationKey: string;
   paginationArr: PaginationAttr[];
   swiperAttrDisplay: boolean;
 }
@@ -25,25 +26,57 @@ class ControlAnimation extends react.Component<
     super(prop);
     this.state = {
       swiperAttrDisplay: false,
-      paginationKey: "0",
       paginationArr: [
         {
-          color: "#4390EE",
-        },
-        {
           color: "#CA4040",
+          editorState: BraftEditor.createEditorState(null),
+          htmlContent: "",
         },
         {
           color: "#FF8604",
+          editorState: BraftEditor.createEditorState(null),
+          htmlContent: "",
         },
       ],
     };
   }
 
-  componentDidMount() {}
+  async componentDidMount() {
+    const { paginationArr, paginationKey } = this.props;
+    var paginationArrState = this.state.paginationArr;
+
+    // 假设此处从服务端获取html格式的编辑器内容
+    // const htmlContent = await fetchEditorContent();
+    // 使用BraftEditor.createEditorState将html字符串转换为编辑器需要的editorStat
+    if (paginationArr[paginationKey].htmlContent) {
+      paginationArrState[
+        paginationKey
+      ].editorState = BraftEditor.createEditorState(
+        this.state.paginationArr[paginationKey].htmlContent
+      );
+      this.setState({
+        paginationArr: paginationArrState,
+      });
+    }
+    this.setState({
+      paginationArr,
+    });
+  }
+
+  handleEditorChange = (editorState) => {
+    const { paginationKey } = this.props;
+
+    var paginationArrState = this.state.paginationArr;
+    paginationArrState[paginationKey].htmlContent = editorState.toHTML();
+    paginationArrState[paginationKey].editorState = editorState;
+    this.setState({ paginationArr: paginationArrState }, () =>
+      this.props.getSwiperArr(paginationArrState)
+    );
+  };
 
   color(color) {
-    const { paginationArr, paginationKey } = this.state;
+    const { paginationArr } = this.state;
+    const { paginationKey } = this.props;
     paginationArr[paginationKey].color = color;
     this.props.getSwiperArr(paginationArr);
   }
@@ -72,8 +105,9 @@ class ControlAnimation extends react.Component<
   }
 
   render() {
-    const { swiperAttrDisplay } = this.state;
-    const { swiperAttr } = this.props;
+    const { swiperAttrDisplay, paginationArr } = this.state;
+    const { swiperAttr, paginationKey } = this.props;
+    console.log(paginationArr[paginationKey].htmlContent);
     return (
       <div className="controller-animation">
         <Button type="primary" onClick={() => this.swiperShow()}>
@@ -89,6 +123,12 @@ class ControlAnimation extends react.Component<
         >
           <SwiperMainAttr swiperAttr={swiperAttr} ok={(e) => this.ok(e)} />
         </Drawer>
+        <BraftEditor
+          style={{ border: "1px solid black" }}
+          imageResizable={true}
+          value={paginationArr[paginationKey].editorState}
+          onSave={this.handleEditorChange}
+        />
       </div>
     );
   }

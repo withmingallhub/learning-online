@@ -1,10 +1,12 @@
 import react from "react";
 import Swiper from "swiper";
 import "swiper/dist/css/swiper.css";
+import "braft-editor/dist/output.css";
 import { SwiperAttr, PaginationAttr } from "../types";
 
 interface PreviewSwiperSlideProps {
   paginationArr: PaginationAttr[];
+  paginationKey: string;
   swiperAttr: SwiperAttr;
   swiperGetKey: (e) => void;
 }
@@ -56,24 +58,6 @@ class PreviewSwiperSlide extends react.Component<
     });
   }
 
-  swiperButton() {
-    return (
-      <>
-        <div className="swiper-button-prev" />
-        <div className="swiper-button-next" />
-      </>
-    );
-  }
-
-  isPagination() {}
-  isScrollbar() {}
-
-  swiperScrollbar() {
-    return <div className="swiper-scrollbar" />;
-  }
-
-  componentDidUpdate(preprops, repstate) {}
-
   renderSwiperPagination() {
     const { paginationArr } = this.props;
     console.log(this.props);
@@ -88,22 +72,29 @@ class PreviewSwiperSlide extends react.Component<
     return (
       <div
         className="swiper-slide"
-        style={{ backgroundColor: color }}
+        style={{
+          backgroundColor: color,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
         key={key}
       >
         <div
           style={{
-            height: "14%",
-            width: "100%",
-            // border: "1px solid black",
+            height: "90%",
+            width: "80%",
+            border: "1px solid black",
           }}
-        />
-        <div
-          style={{
-            height: "84%",
-            width: "100%",
-          }}
-        />
+        >
+          <div
+            className="braft-output-content"
+            dangerouslySetInnerHTML={{
+              __html: this.props.paginationArr[this.props.paginationKey]
+                .htmlContent,
+            }}
+          />
+        </div>
       </div>
     );
   }

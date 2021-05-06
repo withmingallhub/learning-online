@@ -152,7 +152,7 @@ class Audio extends Component<AudioProps, AudioState> {
     const params = {
       audio: this.state.audioBase,
     };
-    axios.post("http://localhost:3004/audio_text", params).then((res) => {
+    axios.post("http://39.104.50.157/audio_text", params).then((res) => {
       console.log(res.data);
       let transResult = res.data.result.translate;
       if (!transResult) transResult = "说了什么没听清";

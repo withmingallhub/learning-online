@@ -237,7 +237,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         x1: 100,
         y1: 100,
-        x2: 200,
+        x2: 400,
         y2: 100,
         type: "line",
       },
@@ -363,7 +363,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         x1: 100,
         y1: 200,
-        x2: 200,
+        x2: 400,
         y2: 200,
         type: "line",
       },
@@ -588,7 +588,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         x: 80,
         y: 80,
-        r: 19, // 外切圆半径
+        r: 50, // 外切圆半径
         n: 3,
         type: "triangle",
       },
@@ -619,7 +619,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         x: 120,
         y: 120,
-        r: 19, // 外切圆半径
+        r: 50, // 外切圆半径
         n: 3,
         type: "triangle",
       },
@@ -707,8 +707,8 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
         r: [0, 0, 0, 0],
         x: 80,
         y: 80,
-        width: 70,
-        height: 40,
+        width: 130,
+        height: 65,
         type: "rect",
       },
       style: {
@@ -742,8 +742,8 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
         r: [0, 0, 0, 0],
         x: 120,
         y: 120,
-        width: 70,
-        height: 40,
+        width: 130,
+        height: 65,
         type: "rect",
       },
       style: {
@@ -867,7 +867,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         cx: 150,
         cy: 50,
-        r: 30,
+        r: 80,
         type: "circle",
       },
       style: {
@@ -901,7 +901,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         cx: 200,
         cy: 50,
-        r: 16,
+        r: 80,
         type: "circle",
       },
       style: {
@@ -970,8 +970,8 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         cx: 200,
         cy: 200,
-        rx: 50,
-        ry: 35,
+        rx: 120,
+        ry: 50,
         type: "ellipse",
       },
       style: {
@@ -1004,8 +1004,8 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         cx: 150,
         cy: 200,
-        rx: 50,
-        ry: 35,
+        rx: 120,
+        ry: 50,
         type: "ellipse",
       },
       style: {
@@ -1129,9 +1129,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     this.drawingArray[key] = new zrender.Sector({
       id: key,
       shape: {
-        cx: 100,
-        cy: 100,
-        r: 60,
+        cx: 150,
+        cy: 150,
+        r: 120,
         startAngle: Math.PI,
         endAngle: Math.PI + (Math.PI * 90) / 180,
         clockwise: true,
@@ -1170,9 +1170,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     this.drawingArray[key] = new zrender.Sector({
       id: key,
       shape: {
-        cx: 200,
-        cy: 100,
-        r: 60,
+        cx: 250,
+        cy: 250,
+        r: 120,
         startAngle: Math.PI,
         endAngle: Math.PI + (Math.PI * 90) / 180,
         clockwise: true,
@@ -1322,10 +1322,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     this.drawingArray[key] = new zrender.Droplet({
       id: key,
       shape: {
-        cx: 80,
-        cy: 80,
-        width: 20,
-        height: 40,
+        cx: 120,
+        cy: 120,
+        width: 50,
+        height: 90,
         type: "droplet",
       },
       style: {
@@ -1356,10 +1356,10 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
     this.drawingArray[key] = new zrender.Droplet({
       id: key,
       shape: {
-        cx: 130,
-        cy: 80,
-        width: 20,
-        height: 40,
+        cx: 220,
+        cy: 220,
+        width: 50,
+        height: 90,
         type: "droplet",
       },
       style: {
@@ -1459,7 +1459,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         x: 80,
         y: 80,
-        r: 18.5, // 外切圆半径
+        r: 80, // 外切圆半径
         n: 5,
         type: "polygon",
       },
@@ -1493,7 +1493,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         x: 130,
         y: 80,
-        r: 18.5, // 外切圆半径
+        r: 80, // 外切圆半径
         n: 5,
         type: "polygon",
       },
@@ -1595,9 +1595,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         cx: 80,
         cy: 80,
-        r: 36,
+        r: 80,
         n: 5,
-        r0: 14,
+        r0: 32,
         type: "star",
       },
       style: {
@@ -1631,9 +1631,9 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
       shape: {
         cx: 200,
         cy: 80,
-        r: 36,
+        r: 80,
         n: 5,
-        r0: 14,
+        r0: 32,
         type: "star",
       },
       style: {
@@ -1770,7 +1770,7 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
   controlText() {
     const { text, rotation } = this.state.controlText;
     return (
-      <div>
+      <div className="pic_controls">
         <span className="pic_font_size">文本内容</span>
         <Input
           size="small"
@@ -2016,8 +2016,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={root}
             title="点"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2025,8 +2023,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={line}
             title="直线"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2034,8 +2030,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={arc}
             title="曲线"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2043,8 +2037,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={triangle}
             title="正三角形"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2052,8 +2044,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={rect}
             title="正四边形"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2061,8 +2051,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={circle}
             title="圆"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2070,8 +2058,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={ellipse}
             title="椭圆"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2079,8 +2065,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={sector}
             title="扇形"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2088,8 +2072,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={droplet}
             title="水滴"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2097,8 +2079,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={polygon}
             title="正多边形"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2106,8 +2086,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={star}
             title="多角星"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2115,8 +2093,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={lineDotted}
             title="虚线"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2124,8 +2100,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={arcDotted}
             title="虚线曲线"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2133,8 +2107,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={triangleDotted}
             title="虚线正三角形"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2142,8 +2114,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={rectDotted}
             title="虚线正四边形"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2151,8 +2121,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={circleDotted}
             title="虚线圆"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2160,8 +2128,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={ellipseDotted}
             title="虚线椭圆"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2169,8 +2135,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={sectorDotted}
             title="虚线扇形"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2178,8 +2142,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={dropletDotted}
             title="虚线水滴"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2187,8 +2149,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={polygonDotted}
             title="虚线正多边形"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2196,8 +2156,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={starDotted}
             title="虚线多角星"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <img
             className="geometry_image"
@@ -2205,8 +2163,6 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
             src={text}
             title="文本"
             alt=""
-            height="49.5px"
-            width="49.5px"
           />
           <div className="dowload_img">
             <Button
@@ -2219,7 +2175,17 @@ class Drawing extends react.Component<DrawingProps, DrawingState> {
           </div>
         </div>
         <div className="drawing_box">
-          <canvas id="drawing_canvas" height="600px" width="800px" />
+          <div
+            style={{
+              marginTop: "10px",
+              height: "600px",
+              width: "700px",
+              border: "1px solid #888888",
+              boxShadow: "10px 10px 5px #888888",
+            }}
+          >
+            <canvas id="drawing_canvas" height="600px" width="700px" />
+          </div>
         </div>
         <div className="control_box">
           {this.state.isControl ? (

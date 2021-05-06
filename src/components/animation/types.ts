@@ -3,4 +3,6 @@ export interface SwiperAttr {
 }
 export interface PaginationAttr {
   color: string;
+  editorState?: any;
+  htmlContent?: string;
 }

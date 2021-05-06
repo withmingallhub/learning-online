@@ -1,5 +1,6 @@
 import react from "react";
 import "./index.css";
+import BraftEditor from "braft-editor";
 import PreviewSwiperFade from "./preview-swiper-fade/index";
 import PreviewSwiperSlide from "./preview-swiper-slide/index";
 import PreviewSwiperCube from "./preview-swiper-cube/index";
@@ -7,6 +8,7 @@ import PreviewSwiperFlip from "./preview-swiper-flip/index";
 import PreviewSwiperCoverflow from "./preview-swiper-coverflow/index";
 import ControlAnimation from "./controller/index";
 import { SwiperAttr, PaginationAttr } from "./types";
+import { Pagination } from "antd";
 
 interface AnimationProps {
   paginationArr?: PaginationAttr[];
@@ -29,9 +31,13 @@ class Animation extends react.Component<AnimationProps, AnimationState> {
       paginationArr: [
         {
           color: "#CA4040",
+          editorState: BraftEditor.createEditorState(null),
+          htmlContent: "",
         },
         {
           color: "#FF8604",
+          editorState: BraftEditor.createEditorState(null),
+          htmlContent: "",
         },
       ],
       pagination: {
@@ -72,11 +78,10 @@ class Animation extends react.Component<AnimationProps, AnimationState> {
     this.setState({
       swiperAttr: e,
     });
-    console.log(e);
   }
 
   render() {
-    const { swiperAttr } = this.state;
+    const { swiperAttr, paginationKey } = this.state;
     return (
       <div className="animation-main">
         {swiperAttr.type === "fade" && (
@@ -84,6 +89,7 @@ class Animation extends react.Component<AnimationProps, AnimationState> {
             paginationArr={this.state.paginationArr}
             swiperAttr={this.state.swiperAttr}
             swiperGetKey={(e) => this.swiperGetKey(e)}
+            paginationKey={paginationKey}
           />
         )}
         {swiperAttr.type === "slide" && (
@@ -91,6 +97,7 @@ class Animation extends react.Component<AnimationProps, AnimationState> {
             paginationArr={this.state.paginationArr}
             swiperAttr={this.state.swiperAttr}
             swiperGetKey={(e) => this.swiperGetKey(e)}
+            paginationKey={paginationKey}
           />
         )}
         {swiperAttr.type === "coverflow" && (
@@ -98,6 +105,7 @@ class Animation extends react.Component<AnimationProps, AnimationState> {
             paginationArr={this.state.paginationArr}
             swiperAttr={this.state.swiperAttr}
             swiperGetKey={(e) => this.swiperGetKey(e)}
+            paginationKey={paginationKey}
           />
         )}
         {swiperAttr.type === "flip" && (
@@ -105,6 +113,7 @@ class Animation extends react.Component<AnimationProps, AnimationState> {
             paginationArr={this.state.paginationArr}
             swiperAttr={this.state.swiperAttr}
             swiperGetKey={(e) => this.swiperGetKey(e)}
+            paginationKey={paginationKey}
           />
         )}
         {swiperAttr.type === "cube" && (
@@ -112,10 +121,12 @@ class Animation extends react.Component<AnimationProps, AnimationState> {
             paginationArr={this.state.paginationArr}
             swiperAttr={this.state.swiperAttr}
             swiperGetKey={(e) => this.swiperGetKey(e)}
+            paginationKey={paginationKey}
           />
         )}
         <ControlAnimation
           swiperAttr={this.state.swiperAttr}
+          paginationArr={this.state.paginationArr}
           paginationKey={this.state.paginationKey}
           getSwiperArr={(e) => this.getSwiperArr(e)}
           getSwiperAttr={(e) => this.getSwiperAttr(e)}
